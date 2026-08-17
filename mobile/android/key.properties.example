@@ -1,0 +1,4 @@
+storePassword=CHANGE_ME
+keyPassword=CHANGE_ME
+keyAlias=bletefjale
+storeFile=../keys/bletefjale-upload-keystore.jks

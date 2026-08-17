@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BletëFjalë — Përkthyes për Bletari</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand" aria-label="BletëFjalë">
+        <div class="bee-mark" aria-hidden="true"><span></span><span></span><i></i></div>
+        <div><strong>BletëFjalë</strong><small>TERMINOLOGJI PROFESIONALE</small></div>
+      </div>
+      <nav aria-label="Navigimi kryesor">
+        <button class="nav-link active" data-view="translate">Përkthe</button>
+        <button class="nav-link" data-view="glossary">Fjalori</button>
+        <button class="nav-link" data-view="custom">Fjalori im</button>
+      </nav>
+      <div class="header-actions"><button id="quickStartButton" class="quick-start-button" title="Hap udhëzuesin e shpejtë">? Quick Start</button><div class="offline-badge"><span></span> Punon pa internet</div></div>
+    </header>
+
+    <main>
+      <section id="translateView" class="view active">
+        <section class="hero">
+          <p class="eyebrow">PËR BLETARË, VETERINERË DHE STUDENTË</p>
+          <h1>Fjalët e sakta për<br><em>çdo koshere.</em></h1>
+          <p class="hero-copy">Përkthim i specializuar i termave, praktikave dhe sëmundjeve të bletarisë. Fjalori teknik përparësohet gjithmonë.</p>
+        </section>
+
+        <section class="translator-card" aria-label="Përkthyesi">
+          <div class="language-row">
+            <label>
+              <span>Gjuha burimore</span>
+              <select id="sourceLanguage" aria-label="Gjuha burimore"></select>
+            </label>
+            <button id="swapLanguages" class="swap-button" title="Ndërro gjuhët" aria-label="Ndërro gjuhët">⇄</button>
+            <label>
+              <span>Gjuha e synuar</span>
+              <select id="targetLanguage" aria-label="Gjuha e synuar"></select>
+            </label>
+          </div>
+          <div class="translation-grid">
+            <div class="text-panel source-panel">
+              <div class="panel-head"><strong>Teksti për përkthim</strong><div class="import-actions"><button id="documentImportButton" class="text-action">Ngarko skedar</button><button id="pasteButton" class="text-action">Ngjit</button></div></div>
+              <textarea id="sourceText" spellcheck="true" placeholder="Shkruani një term ose frazë të bletarisë…"></textarea>
+              <div class="panel-foot"><span><span id="sourceCount">0 karaktere</span><span id="fileInfo"></span></span><button id="clearButton" class="text-action">Pastro</button></div>
+            </div>
+            <div class="translate-arrow" aria-hidden="true">→</div>
+            <div class="text-panel result-panel">
+              <div class="panel-head"><strong>Përkthimi profesional</strong><button id="copyButton" class="text-action">Kopjo</button></div>
+              <div id="resultText" class="result-text empty">Përkthimi do të shfaqet këtu.</div>
+              <div class="panel-foot"><span id="matchInfo">Fjalori teknik është gati</span><span class="verified">✓ I verifikuar</span></div>
+            </div>
+          </div>
+          <div class="translate-bottom">
+            <span id="statusMessage" role="status">Shkruani një term ose ngarkoni imazh, PDF, DOCX apo dokument tekstor.</span>
+            <button id="translateButton" class="primary-button">Përkthe tani <span>→</span></button>
+          </div>
+        </section>
+
+        <section class="suggestion-section">
+          <div class="section-title"><div><p class="eyebrow">PËRKTHIME TË SHPEJTA</p><h2>Termat më të përdorur</h2></div><button class="see-all" data-go="glossary">Shih fjalorin →</button></div>
+          <div id="quickTerms" class="term-chips"></div>
+        </section>
+      </section>
+
+      <section id="glossaryView" class="view">
+        <div class="view-header"><p class="eyebrow">REFERENCË TEKNIKE</p><h1>Fjalori i bletarisë</h1><p>Kërkoni sipas termit, përkufizimit ose kategorisë në gjuhët e mbështetura.</p></div>
+        <div class="glossary-toolbar">
+          <input id="glossarySearch" type="search" placeholder="Kërko p.sh. varroa, propolis, mbretëreshë…" aria-label="Kërko në fjalor">
+          <select id="categoryFilter" aria-label="Filtro sipas kategorisë"></select>
+          <span id="glossaryCount"></span>
+        </div>
+        <div id="glossaryList" class="glossary-list"></div>
+      </section>
+
+      <section id="customView" class="view">
+        <div class="view-header"><p class="eyebrow">FJALORI PERSONAL</p><h1>Termat e fermës suaj</h1><p>Shtoni shënime, emërtime lokale ose përkthime të miratuara për punën tuaj.</p></div>
+        <div class="custom-grid">
+          <form id="customForm" class="custom-form">
+            <h2>Shto një term</h2>
+            <label>Termi burimor<input id="customSource" required maxlength="100" placeholder="p.sh. ushqim stimulues"></label>
+            <label>Gjuha burimore<select id="customSourceLanguage"></select></label>
+            <label>Përkthimi<input id="customTarget" required maxlength="160" placeholder="Përkthimi teknik"></label>
+            <label>Gjuha e synuar<select id="customTargetLanguage"></select></label>
+            <label>Shënim (opsionale)<textarea id="customNote" maxlength="300" placeholder="Konteksti i përdorimit…"></textarea></label>
+            <button type="submit" class="primary-button">Ruaj termin <span>+</span></button>
+          </form>
+          <aside class="custom-library">
+            <div class="library-head"><div><h2>Termat e ruajtur</h2><p id="customCount">0 terma personalë</p></div><div class="library-actions"><button id="exportButton" class="outline-button">Eksporto</button><button id="importButton" class="outline-button">Importo</button></div></div>
+            <div id="customList" class="custom-list"><p class="empty-state">Nuk keni shtuar ende terma personalë.</p></div>
+          </aside>
+        </div>
+      </section>
+    </main>
+  </div>
+  <div id="quickStartModal" class="modal-backdrop" aria-hidden="true">
+    <section class="quick-start-modal" role="dialog" aria-modal="true" aria-labelledby="quickStartTitle">
+      <button id="closeQuickStart" class="modal-close" aria-label="Mbyll udhëzuesin">×</button>
+      <p class="eyebrow">NISJA E SHPEJTË</p>
+      <h2 id="quickStartTitle">Përkthe në pak hapa</h2>
+      <p class="quick-start-intro">BletëFjalë është ndërtuar për punën e përditshme të bletarëve, teknikëve dhe studentëve.</p>
+      <div class="quick-start-steps">
+        <div class="quick-step"><b>1</b><div><strong>Zgjidh gjuhët</strong><p>Përcaktoni gjuhën burimore dhe gjuhën e synuar, përfshirë turqishten dhe greqishten.</p></div></div>
+        <div class="quick-step"><b>2</b><div><strong>Shkruaj ose ngarko</strong><p>Shkruani tekstin, ose klikoni <strong>Ngarko skedar</strong> për imazh, PDF, DOCX, TXT, MD ose CSV.</p></div></div>
+        <div class="quick-step"><b>3</b><div><strong>Përkthe dhe kopjo</strong><p>Klikoni <strong>Përkthe tani</strong>, pastaj përdorni <strong>Kopjo</strong> për ta marrë rezultatin.</p></div></div>
+        <div class="quick-step"><b>4</b><div><strong>Ruaj termat e tu</strong><p>Te <strong>Fjalori im</strong> mund të shtoni, eksportoni dhe importoni terminologji personale.</p></div></div>
+      </div>
+      <div class="quick-start-note"><strong>Këshillë:</strong> Përdorni <strong>Ctrl + Enter</strong> për përkthim të shpejtë. Për PDF të skanuar, ngarkoni faqen si imazh.</div>
+      <button id="startTranslatingButton" class="primary-button modal-primary">Fillo përkthimin <span>→</span></button>
+    </section>
+  </div>
+  <div id="toast" class="toast" role="alert"></div>
+  <script src="glossary.js"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>
