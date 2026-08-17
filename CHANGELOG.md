@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.0 — 2026-08-17
+- Integrated five selectable visual themes from the supplied Stitch design collection: BletëFjalë, Midnight Hive, Forest Edge, Blossom Spring and Heritage.
+- Added a persistent theme selector to the desktop header; the selected theme is retained locally for future sessions.
+- Adapted application surfaces, inputs, controls, cards, badges and focus states to each palette without changing offline translation, OCR, document import or personal glossary workflows.
+- Added automated checks confirming all theme choices, palettes and persistence wiring are present.
+
 ## 1.2.0 â€” 2026-08-17
 - Expanded the offline beekeeping glossary to 149 technical terms in Albanian, English, Italian, German, French, Spanish, Turkish and Greek.
 - Added stable term identifiers and searchable aliases, including improved Turkish character normalisation.

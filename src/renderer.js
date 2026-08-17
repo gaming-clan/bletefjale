@@ -1,6 +1,14 @@
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 const CUSTOM_STORAGE_KEY = 'bletefjale-custom-glossary-v1';
+const THEME_STORAGE_KEY = 'bletefjale-theme-v1';
+const AVAILABLE_THEMES = new Set([
+  'bletefjale',
+  'midnight-hive',
+  'forest-edge',
+  'blossom-spring',
+  'heritage',
+]);
 
 let customTerms = loadCustomTerms();
 let activeView = 'translate';
@@ -20,6 +28,33 @@ function validCustomTerm(term) {
 
 function saveCustomTerms() {
   localStorage.setItem(CUSTOM_STORAGE_KEY, JSON.stringify(customTerms));
+}
+
+function savedTheme() {
+  try {
+    const theme = localStorage.getItem(THEME_STORAGE_KEY);
+    return AVAILABLE_THEMES.has(theme) ? theme : 'bletefjale';
+  } catch {
+    return 'bletefjale';
+  }
+}
+
+function applyTheme(theme, persist = true) {
+  const resolvedTheme = AVAILABLE_THEMES.has(theme) ? theme : 'bletefjale';
+  document.documentElement.dataset.theme = resolvedTheme;
+  $('#themeSelect').value = resolvedTheme;
+  if (persist) {
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, resolvedTheme);
+    } catch {
+      // Tema mbetet aktive për sesionin edhe nëse ruajtja lokale nuk është e disponueshme.
+    }
+  }
+}
+
+function initializeThemeControl() {
+  applyTheme(savedTheme(), false);
+  $('#themeSelect').addEventListener('change', event => applyTheme(event.target.value));
 }
 
 function normalize(value) {
@@ -377,6 +412,7 @@ function setupEvents() {
 }
 
 function init() {
+  initializeThemeControl();
   initializeLanguageControls();
   setupEvents();
   updateSourceCount();
