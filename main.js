@@ -12,10 +12,13 @@ const OCR_LANGUAGE_CODES = {
   sq: 'sqi', en: 'eng', it: 'ita', de: 'deu', fr: 'fra', es: 'spa', tr: 'tur', el: 'ell'
 };
 const MAX_PDF_OCR_PAGES = 10;
+const PDF_OCR_RENDER_SCALE = 4;
+const OCR_PAGE_SEGMENTATION_MODE = '3';
 
 async function recognizeImage(source, sourceLanguage) {
   const worker = await Tesseract.createWorker(OCR_LANGUAGE_CODES[sourceLanguage] || 'eng');
   try {
+    await worker.setParameters({ tessedit_pageseg_mode: OCR_PAGE_SEGMENTATION_MODE, preserve_interword_spaces: '1' });
     const recognition = await worker.recognize(source);
     return recognition.data.text || '';
   } finally {
@@ -33,9 +36,10 @@ async function recognizeScannedPdf(filePath, sourceLanguage) {
   const pages = [];
 
   try {
+    await worker.setParameters({ tessedit_pageseg_mode: OCR_PAGE_SEGMENTATION_MODE, preserve_interword_spaces: '1' });
     for (let pageNumber = 1; pageNumber <= pageCount; pageNumber += 1) {
       const page = await document.getPage(pageNumber);
-      const viewport = page.getViewport({ scale: 2 });
+      const viewport = page.getViewport({ scale: PDF_OCR_RENDER_SCALE });
       const canvas = createCanvas(Math.ceil(viewport.width), Math.ceil(viewport.height));
       const context = canvas.getContext('2d');
       context.fillStyle = '#ffffff';

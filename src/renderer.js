@@ -12,6 +12,30 @@ const AVAILABLE_THEMES = new Set([
   'heritage',
 ]);
 
+// Fraza të verifikuara për etiketa bletarie. Ato përdoren vetëm për përkthime
+// offline turqisht–shqip dhe plotësojnë, jo zëvendësojnë, fjalorin teknik.
+const DOCUMENT_LABEL_PHRASES = {
+  'tr:sq': [
+    { id: 'doc-varotem-apply-between-frames', source: 'Arıların üzerine temas edecek şekilde tüm çerçeve aralarına uygulayarak, bütün koloninin tüketmesi sağlanmalıdır', target: 'Aplikojeni ndërmjet të gjitha kornizave, duke siguruar kontakt me bletët, në mënyrë që ta konsumojë e gjithë kolonia.' },
+    { id: 'doc-varotem-temperature-application', source: 'Hava sıcaklığının 14°C ve üzerinde olduğu her dönemde püskürtme uygulaması, 10°C ve üzerinde olduğu her dönemde damlatma uygulaması yapılması tavsiye edilir', target: 'Rekomandohet aplikimi me spërkatje kur temperatura është 14°C ose më e lartë dhe aplikimi me pikim kur temperatura është 10°C ose më e lartë.', aliases: ['Hava sıcaklığının 14*C ve üzerinde olduğu her dönemde püskürtme uygulaması, 10*C ve üzerinde olduğu her dönemde damlatma uygulaması yapılması tavsiye edilir'] },
+    { id: 'doc-varotem-dose-per-frame', source: 'Her çerçeve arasına 2 ml püskürtme veya damlatma şeklinde uygulayınız', target: 'Aplikoni 2 ml me spërkatje ose me pikim ndërmjet çdo kornize.', aliases: ['Her çevçeve arasına 2 ml püskürtme veya damlatma şeklinde uygulayınız'] },
+    { id: 'doc-varotem-no-honey-residue', source: 'Balda kalıntı bırakmaz, bal akım döneminde dahi kullanılabilir', target: 'Nuk lë mbetje në mjaltë dhe mund të përdoret edhe gjatë rrjedhës së mjaltit.' },
+    { id: 'doc-varotem-organic-suitable', source: 'Organik arı yetiştiriciliğine uygun olarak geliştirilmiştir', target: 'Është zhvilluar për përdorim të përshtatshëm në bletarinë organike.' },
+    { id: 'doc-varotem-close-cap', source: 'Uygulama sonrası kapağı yeniden çevirerek kapalı olduğundan emin olunuz', target: 'Pas aplikimit, sigurohuni që kapaku të jetë mbyllur sërish.' },
+    { id: 'doc-varotem-external-parasites', source: 'Dış parazitlere karşı arıların fizyolojik korunmasını desteklenmesine yardımcı olur', target: 'Ndihmon në mbështetjen e mbrojtjes fiziologjike të bletëve kundër parazitëve të jashtëm.' },
+    { id: 'doc-varotem-strengthens-colony', source: 'Bal arılarında dış parazitlere karşı koloniyi güçlendirir', target: 'Forcon koloninë e bletëve të mjaltit kundër parazitëve të jashtëm.' },
+    { id: 'doc-varotem-supports-brood', source: 'Yavru gelişimini destekler', target: 'Mbështet zhvillimin e pjellës.' },
+    { id: 'doc-varotem-digestion-immunity', source: 'Sindirim sistemini düzenler ve bağışıklık sistemini güçlendirmeye yardımcı olur', target: 'Ndihmon rregullimin e sistemit tretës dhe forcimin e sistemit imunitar.' },
+    { id: 'doc-varotem-wingless-bees', source: 'Kanatsız arı çıkmasını önlemeye yardımcı olur', target: 'Ndihmon në parandalimin e daljes së bletëve pa krahë.' },
+    { id: 'doc-varotem-no-special-storage', source: 'Özel saklama koşulu yoktur', target: 'Nuk kërkohen kushte të veçanta ruajtjeje.' },
+    { id: 'doc-varotem-use-opened-packages', source: 'Açılmış ambalajları kısa sürede uygulayınız', target: 'Përdorini paketimet e hapura brenda një kohe të shkurtër.' },
+    { id: 'doc-varotem-no-chemical-components', source: 'Renklendirici, koruyucu ve hiçbir kimyasal bileşen içermez', target: 'Nuk përmban ngjyrues, konservues ose përbërës kimikë.' },
+    { id: 'doc-inverturk-add-to-mixture', source: 'Tabloda belirtilen üretim miktarınıza göre İnvertürk ilave ederek karıştırıcıyı 1,5 saat boyunca çalıştırınız', target: 'Shtoni İnvertürk sipas sasisë së prodhimit të treguar në tabelë dhe mbajeni përzierësin në punë për 1,5 orë.' },
+    { id: 'doc-inverturk-give-to-bees', source: 'elde ettiğiniz invert şekeri gıdaya uygun ambalajlarda bal arılarının besin ihtiyacını desteklemek amaçlı verebilirsiniz', target: 'Sheqerin invert të përgatitur mund ta jepni në ambalazhe të përshtatshme për ushqim, për të mbështetur nevojat ushqimore të bletëve të mjaltit.' },
+    { id: 'doc-inverturk-invert-sugar', source: 'İnvert şeker yapımında, fondan ve kek yapımında ürünlerin amaçlı verebilirsiniz', target: 'Mund të përdoret për përgatitjen e sheqerit invert, fondantit dhe kekut ushqimor.' }
+  ]
+};
+
 let customTerms = loadCustomTerms();
 let hives = loadStoredItems(HIVE_STORAGE_KEY, validHive);
 let communityPosts = loadStoredItems(COMMUNITY_STORAGE_KEY, validCommunityPost);
@@ -107,9 +131,27 @@ function escapeRegex(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+function phraseExpression(source) {
+  const flexibleWhitespace = escapeRegex(String(source || '').trim().replace(/\s+/g, ' ')).replaceAll(' ', '\\s+');
+  return new RegExp(`(^|[^\\p{L}\\p{N}])${flexibleWhitespace}(?=$|[^\\p{L}\\p{N}])`, 'giu');
+}
+
 function sourceLanguage() { return $('#sourceLanguage').value; }
 function targetLanguage() { return $('#targetLanguage').value; }
 function allTerms() { return [...customTerms, ...GLOSSARY]; }
+
+function documentPhraseEntries(from, to) {
+  const phrases = DOCUMENT_LABEL_PHRASES[`${from}:${to}`] || [];
+  return phrases.map(phrase => ({
+    id: phrase.id,
+    t: { [from]: phrase.source, [to]: phrase.target },
+    a: { [from]: phrase.aliases || [] }
+  }));
+}
+
+function translationTerms(from, to) {
+  return [...allTerms(), ...documentPhraseEntries(from, to)];
+}
 
 function variantsFor(entry, language) {
   const canonical = entry.t?.[language];
@@ -152,7 +194,7 @@ function createTextTranslation(text, from, to) {
 
   let output = original;
   const matches = [];
-  const entries = allTerms()
+  const entries = translationTerms(from, to)
     .filter(entry => variantsFor(entry, from).length && entry.t[to])
     .flatMap(entry => variantsFor(entry, from).map(source => ({ entry, source })))
     .sort((a, b) => b.source.length - a.source.length);
@@ -160,7 +202,7 @@ function createTextTranslation(text, from, to) {
   const matchedIds = new Set();
   entries.forEach(({ entry, source }) => {
     const replacement = entry.t[to];
-    const expression = new RegExp(`(^|[^\\p{L}\\p{N}])${escapeRegex(source)}(?=$|[^\\p{L}\\p{N}])`, 'giu');
+    const expression = phraseExpression(source);
     if (expression.test(output)) {
       expression.lastIndex = 0;
       output = output.replace(expression, (_, prefix) => `${prefix}${replacement}`);

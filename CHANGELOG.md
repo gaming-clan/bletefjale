@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.6.0 — 2026-08-17
+- Improved scanned-PDF OCR by rendering pages at higher resolution and applying a layout mode suited to multi-column product labels.
+- Added 19 common Turkish product-label phrases and offline Turkish–Albanian label instructions, including application, dosage, storage and nutritional guidance for the supplied product labels.
+- Made phrase matching tolerant of OCR line breaks, so instructions split across lines can still translate as a complete sentence.
+- Added end-to-end regression tests for scanned-label phrases and OCR whitespace variation.
+
 ## 1.5.0 — 2026-08-17
 - Added hybrid PDF import: PDFs with a selectable text layer use direct extraction, while scanned or graphic-only PDFs automatically render locally and pass through OCR.
 - Added offline PDF page rendering through PDF.js and local canvas support, then Tesseract OCR in the user-selected source language.

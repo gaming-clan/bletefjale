@@ -1,6 +1,6 @@
 {
   "name": "bletefjale",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Përkthyes shumëgjuhësh për terminologjinë profesionale të bletarisë.",
   "main": "main.js",
   "author": "BletëFjalë",
@@ -8,12 +8,13 @@
   "scripts": {
     "start": "electron .",
     "build": "electron-builder --win portable --x64",
-    "lint": "node --check main.js && node --check preload.js && node --check src/renderer.js && node --check src/glossary.js && node tests/glossary.test.js && node tests/themes.test.js && node tests/modules.test.js",
+    "lint": "node --check main.js && node --check preload.js && node --check src/renderer.js && node --check src/glossary.js && node tests/glossary.test.js && node tests/themes.test.js && node tests/modules.test.js && node tests/document-translation.test.js",
     "build:dir": "electron-builder --win --x64 --dir",
     "build:portable": "electron-builder --win portable --x64",
     "test:glossary": "node tests/glossary.test.js",
     "test:themes": "node tests/themes.test.js",
-    "test:modules": "node tests/modules.test.js"
+    "test:modules": "node tests/modules.test.js",
+    "test:document-translation": "node tests/document-translation.test.js"
   },
   "build": {
     "appId": "com.bletefjale.desktop",

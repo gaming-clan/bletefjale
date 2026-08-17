@@ -44,4 +44,9 @@ assert.equal(lookup('βασίλισσα μέλισσα', 'el', 'en'), 'queen bee
 assert.equal(lookup('Bienenstock', 'de', 'tr'), 'kovan');
 assert.equal(lookup('tarlacı arı', 'tr', 'el'), 'συλλέκτρια μέλισσα');
 assert.equal(lookup('VSH', 'en', 'sq'), 'higjienë e ndjeshme ndaj Varroa-s');
+assert.equal(lookup('KULLANIM ŞEKLİ', 'tr', 'sq'), 'Mënyra e përdorimit');
+assert.equal(lookup('KULLANIM AMACI', 'tr', 'sq'), 'Qëllimi i përdorimit');
+assert.equal(lookup('Renklendirici ve Koruyucu içermez', 'tr', 'sq'), 'Nuk përmban ngjyrues ose konservues');
+assert.equal(lookup('İçeriğindeki bitkilerden gelen vitamin, mineral ve aminoasit içerir', 'tr', 'sq'), 'Përmban vitamina, minerale dhe aminoacide nga bimët në përbërje');
+assert.equal(lookup('Pancar şekerini kademeli olarak ilave ediniz', 'tr', 'sq'), 'Shtoni gradualisht sheqerin e panxharit');
 console.log(`OK: ${GLOSSARY.length} terma × ${LANGUAGES.length} gjuhë; përkthimet bazë kaluan.`);
