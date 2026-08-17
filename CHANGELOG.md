@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.0 — 2026-08-17
+- Added hybrid PDF import: PDFs with a selectable text layer use direct extraction, while scanned or graphic-only PDFs automatically render locally and pass through OCR.
+- Added offline PDF page rendering through PDF.js and local canvas support, then Tesseract OCR in the user-selected source language.
+- Added a clear “OCR nga PDF-ja” import status and improved error guidance when neither direct extraction nor OCR yields readable text.
+- Verified the OCR path against the supplied Varotem and İnvertürk Turkish product-label PDFs, which have no usable text layer.
+
 ## 1.4.0 — 2026-08-17
 - Restored the visible upload control in the translation panel for image OCR and PDF, DOCX, TXT, MD and CSV imports.
 - Activated My Hives as a local-first hive register with status, location, notes, inspection dates and one-click inspection updates.

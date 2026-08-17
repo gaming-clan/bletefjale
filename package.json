@@ -1,6 +1,6 @@
 {
   "name": "bletefjale",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Përkthyes shumëgjuhësh për terminologjinë profesionale të bletarisë.",
   "main": "main.js",
   "author": "BletëFjalë",
@@ -30,7 +30,9 @@
       "SECURITY.md"
     ],
     "win": {
-      "target": ["portable"],
+      "target": [
+        "portable"
+      ],
       "icon": "assets/app-icon.ico"
     },
     "portable": {
@@ -39,7 +41,9 @@
     "asar": true,
     "asarUnpack": [
       "node_modules/tesseract.js/**",
-      "node_modules/tesseract.js-core/**"
+      "node_modules/tesseract.js-core/**",
+      "node_modules/@napi-rs/canvas/**",
+      "node_modules/@napi-rs/canvas-win32-x64-msvc/**"
     ]
   },
   "devDependencies": {
@@ -51,8 +55,10 @@
     "electron-builder@26.15.3": true
   },
   "dependencies": {
+    "@napi-rs/canvas": "^1.0.6",
     "mammoth": "^1.11.0",
     "pdf-parse": "^1.1.1",
+    "pdfjs-dist": "^6.2.108",
     "png-to-ico": "^2.1.8",
     "tesseract.js": "^5.1.1"
   },

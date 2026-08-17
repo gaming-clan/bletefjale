@@ -3,9 +3,56 @@ const path = require('path');
 const fs = require('fs');
 const mammoth = require('mammoth');
 const pdf = require('pdf-parse');
+const { createCanvas } = require('@napi-rs/canvas');
 const Tesseract = require('tesseract.js');
 
 let mainWindow;
+
+const OCR_LANGUAGE_CODES = {
+  sq: 'sqi', en: 'eng', it: 'ita', de: 'deu', fr: 'fra', es: 'spa', tr: 'tur', el: 'ell'
+};
+const MAX_PDF_OCR_PAGES = 10;
+
+async function recognizeImage(source, sourceLanguage) {
+  const worker = await Tesseract.createWorker(OCR_LANGUAGE_CODES[sourceLanguage] || 'eng');
+  try {
+    const recognition = await worker.recognize(source);
+    return recognition.data.text || '';
+  } finally {
+    await worker.terminate();
+  }
+}
+
+async function recognizeScannedPdf(filePath, sourceLanguage) {
+  const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
+  const pdfData = new Uint8Array(fs.readFileSync(filePath));
+  const loadingTask = pdfjs.getDocument({ data: pdfData, disableFontFace: true });
+  const document = await loadingTask.promise;
+  const pageCount = Math.min(document.numPages, MAX_PDF_OCR_PAGES);
+  const worker = await Tesseract.createWorker(OCR_LANGUAGE_CODES[sourceLanguage] || 'eng');
+  const pages = [];
+
+  try {
+    for (let pageNumber = 1; pageNumber <= pageCount; pageNumber += 1) {
+      const page = await document.getPage(pageNumber);
+      const viewport = page.getViewport({ scale: 2 });
+      const canvas = createCanvas(Math.ceil(viewport.width), Math.ceil(viewport.height));
+      const context = canvas.getContext('2d');
+      context.fillStyle = '#ffffff';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      await page.render({ canvasContext: context, viewport }).promise;
+      const recognition = await worker.recognize(canvas.toBuffer('image/png'));
+      const pageText = String(recognition.data.text || '').trim();
+      if (pageText) pages.push(pageText);
+      page.cleanup();
+    }
+  } finally {
+    await worker.terminate();
+    if (typeof loadingTask.destroy === 'function') await loadingTask.destroy();
+  }
+
+  return pages.join('\n\n');
+}
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -77,14 +124,14 @@ app.whenReady().then(() => {
       let type = 'document';
       if (imageExtensions.has(extension)) {
         type = 'image';
-        const ocrLanguages = { sq: 'sqi', en: 'eng', it: 'ita', de: 'deu', fr: 'fra', es: 'spa', tr: 'tur', el: 'ell' };
-        const worker = await Tesseract.createWorker(ocrLanguages[sourceLanguage] || 'eng');
-        const recognition = await worker.recognize(filePath);
-        await worker.terminate();
-        text = recognition.data.text;
+        text = await recognizeImage(filePath, sourceLanguage);
       } else if (extension === '.pdf') {
         const parsed = await pdf(fs.readFileSync(filePath));
-        text = parsed.text;
+        text = String(parsed.text || '').trim();
+        if (text.length < 40) {
+          type = 'pdf-ocr';
+          text = await recognizeScannedPdf(filePath, sourceLanguage);
+        }
       } else if (extension === '.docx') {
         const extracted = await mammoth.extractRawText({ path: filePath });
         text = extracted.value;
@@ -96,7 +143,7 @@ app.whenReady().then(() => {
 
       text = String(text || '').replace(/\r/g, '').replace(/\n{3,}/g, '\n\n').trim();
       if (!text) {
-        throw new Error(extension === '.pdf' ? 'PDF-ja nuk përmban tekst të lexueshëm. Për një PDF të skanuar, përdorni faqet si imazhe.' : 'Nuk u gjet tekst i lexueshëm në këtë skedar.');
+        throw new Error(extension === '.pdf' ? 'PDF-ja nuk përmban tekst të lexueshëm as pas OCR-së. Kontrolloni cilësinë e skanimit ose provoni një imazh më të qartë.' : 'Nuk u gjet tekst i lexueshëm në këtë skedar.');
       }
       return { canceled: false, fileName: path.basename(filePath), type, text };
     } catch (error) {

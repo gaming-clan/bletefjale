@@ -44,6 +44,10 @@ assert.match(renderer, /COMMUNITY_STORAGE_KEY/, 'Ruajtja lokale e komunitetit mu
 assert.match(renderer, /desktopAPI\.importDocument/, 'Butoni nuk përdor urën e importit të dokumenteve.');
 assert.match(preload, /importDocument:/, 'Ura e importit të dokumenteve mungon.');
 assert.match(main, /document:import/, 'Procesi desktop nuk përpunon dokumentet.');
+assert.match(main, /recognizeScannedPdf/, 'OCR-ja për PDF-të e skanuara mungon.');
+assert.match(main, /pdfjs-dist\/legacy\/build\/pdf\.mjs/, 'PDF.js nuk përdoret për renderimin OCR.');
+assert.match(main, /@napi-rs\/canvas/, 'Canvas lokal për OCR të PDF-ve mungon.');
+assert.match(renderer, /pdf-ocr/, 'Ndërfaqja nuk njofton OCR-në e PDF-së.');
 for (const extension of ['pdf', 'docx', 'txt', 'md', 'csv', 'png', 'jpg', 'webp']) {
   assert.match(main, new RegExp(`'${extension}'`), `Mbështetja për ${extension} mungon.`);
 }

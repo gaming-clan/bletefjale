@@ -323,7 +323,11 @@ async function importDocument() {
     $('#sourceText').value = result.text;
     updateSourceCount();
     translate();
-    const sourceType = result.type === 'image' ? 'OCR nga imazhi' : 'Teksti nga dokumenti';
+    const sourceType = result.type === 'image'
+      ? 'OCR nga imazhi'
+      : result.type === 'pdf-ocr'
+        ? 'OCR nga PDF-ja'
+        : 'Teksti nga dokumenti';
     $('#statusMessage').textContent = `${sourceType} u ngarkua nga ${result.fileName}.`;
     showToast('Skedari u lexua dhe u vendos për përkthim.');
   } catch {
