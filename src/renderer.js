@@ -2,6 +2,8 @@ const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 const CUSTOM_STORAGE_KEY = 'bletefjale-custom-glossary-v1';
 const THEME_STORAGE_KEY = 'bletefjale-theme-v1';
+const HIVE_STORAGE_KEY = 'bletefjale-hives-v1';
+const COMMUNITY_STORAGE_KEY = 'bletefjale-community-v1';
 const AVAILABLE_THEMES = new Set([
   'bletefjale',
   'midnight-hive',
@@ -11,6 +13,8 @@ const AVAILABLE_THEMES = new Set([
 ]);
 
 let customTerms = loadCustomTerms();
+let hives = loadStoredItems(HIVE_STORAGE_KEY, validHive);
+let communityPosts = loadStoredItems(COMMUNITY_STORAGE_KEY, validCommunityPost);
 let activeView = 'translate';
 
 function loadCustomTerms() {
@@ -24,6 +28,37 @@ function loadCustomTerms() {
 
 function validCustomTerm(term) {
   return term && typeof term.id === 'string' && term.t && typeof term.t === 'object' && term.sourceLanguage && term.targetLanguage;
+}
+
+function validHive(hive) {
+  return hive && typeof hive.id === 'string' && typeof hive.name === 'string' && typeof hive.location === 'string' && typeof hive.status === 'string';
+}
+
+function validCommunityPost(post) {
+  return post && typeof post.id === 'string' && typeof post.author === 'string' && typeof post.topic === 'string' && typeof post.title === 'string' && typeof post.body === 'string';
+}
+
+function loadStoredItems(key, validator) {
+  try {
+    const saved = JSON.parse(localStorage.getItem(key) || '[]');
+    return Array.isArray(saved) ? saved.filter(validator) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveStoredItems(key, items) {
+  localStorage.setItem(key, JSON.stringify(items));
+}
+
+function makeLocalId(prefix) {
+  return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+function escapeHTML(value) {
+  return String(value || '').replace(/[&<>'"]/g, character => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+  }[character]));
 }
 
 function saveCustomTerms() {
@@ -273,6 +308,27 @@ function showView(viewName) {
   $$('.nav-link').forEach(button => button.classList.toggle('active', button.dataset.view === viewName));
   if (viewName === 'glossary') renderGlossary();
   if (viewName === 'custom') renderCustomTerms();
+  if (viewName === 'hives') renderHives();
+  if (viewName === 'community') renderCommunity();
+}
+
+async function importDocument() {
+  try {
+    const result = await window.desktopAPI.importDocument(sourceLanguage());
+    if (result.canceled) return;
+    if (result.error) {
+      showToast(`Ngarkimi nuk u krye: ${result.error}`);
+      return;
+    }
+    $('#sourceText').value = result.text;
+    updateSourceCount();
+    translate();
+    const sourceType = result.type === 'image' ? 'OCR nga imazhi' : 'Teksti nga dokumenti';
+    $('#statusMessage').textContent = `${sourceType} u ngarkua nga ${result.fileName}.`;
+    showToast('Skedari u lexua dhe u vendos për përkthim.');
+  } catch {
+    showToast('Nuk u arrit hapja e skedarit. Provoni përsëri.');
+  }
 }
 
 async function pasteText() {
@@ -372,6 +428,160 @@ async function importCustomTerms() {
   }
 }
 
+function hiveStatusLabel(status) {
+  return {
+    healthy: 'E shëndetshme',
+    attention: 'Kërkon kontroll',
+    treatment: 'Në trajtim',
+    inactive: 'Joaktive'
+  }[status] || 'Pa status';
+}
+
+function formatInspectionDate(value) {
+  if (!value) return 'Pa kontroll të regjistruar';
+  const date = new Date(`${value}T00:00:00`);
+  return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString('sq-AL', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function renderHives() {
+  $('#hiveCount').textContent = `${hives.length} ${hives.length === 1 ? 'koshere e ruajtur' : 'koshere të ruajtura'}`;
+  $('#hiveList').innerHTML = hives.length ? hives.map(hive => `
+    <article class="hive-card" data-hive-id="${hive.id}">
+      <div class="hive-card-head"><span class="hive-status status-${hive.status}">${hiveStatusLabel(hive.status)}</span><button class="delete-button" data-delete-hive="${hive.id}" title="Fshi kosheren" aria-label="Fshi kosheren">×</button></div>
+      <h3>${escapeHTML(hive.name)}</h3>
+      <p class="hive-location">${escapeHTML(hive.location)}</p>
+      <dl class="hive-metadata"><div><dt>Kontrolli i fundit</dt><dd>${formatInspectionDate(hive.inspection)}</dd></div><div><dt>Regjistruar</dt><dd>${formatInspectionDate(hive.createdAt?.slice(0, 10))}</dd></div></dl>
+      ${hive.notes ? `<p class="hive-notes">${escapeHTML(hive.notes)}</p>` : ''}
+      <button class="outline-button hive-inspection-button" data-inspect-hive="${hive.id}">Shëno kontroll sot</button>
+    </article>
+  `).join('') : '<p class="empty-state">Nuk keni shtuar ende koshere. Përdorni formularin për të nisur regjistrin tuaj lokal.</p>';
+
+  $$('[data-delete-hive]').forEach(button => button.addEventListener('click', () => {
+    hives = hives.filter(hive => hive.id !== button.dataset.deleteHive);
+    saveStoredItems(HIVE_STORAGE_KEY, hives);
+    renderHives();
+    showToast('Kosherja u fshi nga regjistri lokal.');
+  }));
+  $$('[data-inspect-hive]').forEach(button => button.addEventListener('click', () => {
+    hives = hives.map(hive => hive.id === button.dataset.inspectHive ? { ...hive, inspection: new Date().toISOString().slice(0, 10) } : hive);
+    saveStoredItems(HIVE_STORAGE_KEY, hives);
+    renderHives();
+    showToast('Kontrolli i sotëm u regjistrua.');
+  }));
+}
+
+function addHive(event) {
+  event.preventDefault();
+  const name = $('#hiveName').value.trim();
+  const location = $('#hiveLocation').value.trim();
+  if (!name || !location) return;
+  hives.unshift({
+    id: makeLocalId('hive'),
+    name,
+    location,
+    status: $('#hiveStatus').value,
+    inspection: $('#hiveInspection').value,
+    notes: $('#hiveNotes').value.trim(),
+    createdAt: new Date().toISOString()
+  });
+  saveStoredItems(HIVE_STORAGE_KEY, hives);
+  event.target.reset();
+  renderHives();
+  showToast('Kosherja u ruajt në bletoren lokale.');
+}
+
+function communityMatches(post, query, topic) {
+  if (topic !== 'Të gjitha' && post.topic !== topic) return false;
+  return !query || normalize(`${post.author} ${post.topic} ${post.title} ${post.body}`).includes(normalize(query));
+}
+
+function formatPostDate(value) {
+  if (!value) return 'Tani';
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? 'Tani' : date.toLocaleDateString('sq-AL', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function renderCommunity() {
+  const query = $('#communitySearch').value;
+  const topic = $('#communityFilter').value;
+  const posts = communityPosts.filter(post => communityMatches(post, query, topic));
+  $('#communityCount').textContent = `${posts.length} ${posts.length === 1 ? 'diskutim lokal' : 'diskutime lokale'}`;
+  $('#communityList').innerHTML = posts.length ? posts.map(post => `
+    <article class="community-post" data-post-id="${post.id}">
+      <div class="post-meta"><span class="community-topic">${escapeHTML(post.topic)}</span><span>${formatPostDate(post.createdAt)}</span></div>
+      <h3>${escapeHTML(post.title)}</h3>
+      <p class="post-author">Nga ${escapeHTML(post.author)}</p>
+      <p class="post-body">${escapeHTML(post.body)}</p>
+      <div class="post-actions"><button class="outline-button community-like" data-like-post="${post.id}">⌬ E dobishme <b>${Number(post.likes) || 0}</b></button><button class="delete-button" data-delete-post="${post.id}" title="Fshi diskutimin" aria-label="Fshi diskutimin">×</button></div>
+    </article>
+  `).join('') : '<p class="empty-state">Nuk u gjetën diskutime për këtë kërkim. Krijoni postimin e parë për këtë pajisje.</p>';
+
+  $$('[data-like-post]').forEach(button => button.addEventListener('click', () => {
+    communityPosts = communityPosts.map(post => post.id === button.dataset.likePost ? { ...post, likes: (Number(post.likes) || 0) + 1 } : post);
+    saveStoredItems(COMMUNITY_STORAGE_KEY, communityPosts);
+    renderCommunity();
+  }));
+  $$('[data-delete-post]').forEach(button => button.addEventListener('click', () => {
+    communityPosts = communityPosts.filter(post => post.id !== button.dataset.deletePost);
+    saveStoredItems(COMMUNITY_STORAGE_KEY, communityPosts);
+    renderCommunity();
+    showToast('Diskutimi u fshi nga pajisja.');
+  }));
+}
+
+function addCommunityPost(event) {
+  event.preventDefault();
+  const author = $('#communityAuthor').value.trim();
+  const title = $('#communityTitle').value.trim();
+  const body = $('#communityBody').value.trim();
+  if (!author || !title || !body) return;
+  communityPosts.unshift({
+    id: makeLocalId('post'),
+    author,
+    topic: $('#communityTopic').value,
+    title,
+    body,
+    likes: 0,
+    createdAt: new Date().toISOString()
+  });
+  saveStoredItems(COMMUNITY_STORAGE_KEY, communityPosts);
+  event.target.reset();
+  renderCommunity();
+  showToast('Diskutimi u publikua lokalisht.');
+}
+
+async function exportCommunityPosts() {
+  if (!communityPosts.length) {
+    showToast('Nuk ka diskutime lokale për eksportim.');
+    return;
+  }
+  try {
+    const payload = JSON.stringify({ app: 'BletëFjalë', type: 'community-posts', version: 1, exportedAt: new Date().toISOString(), posts: communityPosts }, null, 2);
+    const result = await window.desktopAPI.saveJson(payload, { title: 'Eksporto diskutimet e komunitetit', defaultPath: 'bletefjale-komuniteti.json' });
+    if (result.saved) showToast('Diskutimet lokale u eksportuan.');
+  } catch {
+    showToast('Eksportimi i diskutimeve nuk u krye.');
+  }
+}
+
+async function importCommunityPosts() {
+  try {
+    const result = await window.desktopAPI.openJson({ title: 'Importo diskutimet e komunitetit' });
+    if (result.canceled) return;
+    const parsed = JSON.parse(result.content);
+    const incoming = Array.isArray(parsed) ? parsed : parsed.posts;
+    if (!Array.isArray(incoming)) throw new Error('Formati nuk pranohet');
+    const existingIds = new Set(communityPosts.map(post => post.id));
+    const safeIncoming = incoming.filter(validCommunityPost).filter(post => !existingIds.has(post.id));
+    communityPosts = [...safeIncoming, ...communityPosts];
+    saveStoredItems(COMMUNITY_STORAGE_KEY, communityPosts);
+    renderCommunity();
+    showToast(safeIncoming.length ? `${safeIncoming.length} diskutime u importuan.` : 'Nuk u gjetën diskutime të reja për import.');
+  } catch {
+    showToast('Skedari nuk përmban diskutime të vlefshme.');
+  }
+}
+
 function setupEvents() {
   $$('.nav-link').forEach(button => button.addEventListener('click', () => showView(button.dataset.view)));
   $$('[data-go="glossary"]').forEach(button => button.addEventListener('click', () => showView('glossary')));
@@ -380,6 +590,7 @@ function setupEvents() {
     if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') translate();
   });
   $('#translateButton').addEventListener('click', translate);
+  $('#importDocumentButton').addEventListener('click', importDocument);
   $('#pasteButton').addEventListener('click', pasteText);
   $('#copyButton').addEventListener('click', copyResult);
   $('#clearButton').addEventListener('click', () => {
@@ -409,6 +620,12 @@ function setupEvents() {
   $('#customForm').addEventListener('submit', addCustomTerm);
   $('#exportButton').addEventListener('click', exportCustomTerms);
   $('#importButton').addEventListener('click', importCustomTerms);
+  $('#hiveForm').addEventListener('submit', addHive);
+  $('#communityForm').addEventListener('submit', addCommunityPost);
+  $('#communitySearch').addEventListener('input', renderCommunity);
+  $('#communityFilter').addEventListener('change', renderCommunity);
+  $('#exportCommunityButton').addEventListener('click', exportCommunityPosts);
+  $('#importCommunityButton').addEventListener('click', importCommunityPosts);
 }
 
 function init() {
@@ -419,6 +636,8 @@ function init() {
   renderQuickTerms();
   renderGlossary();
   renderCustomTerms();
+  renderHives();
+  renderCommunity();
 }
 
 document.addEventListener('DOMContentLoaded', init);

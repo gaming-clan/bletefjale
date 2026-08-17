@@ -20,6 +20,8 @@
         <button class="nav-link active" data-view="translate">Përkthe</button>
         <button class="nav-link" data-view="glossary">Fjalori</button>
         <button class="nav-link" data-view="custom">Fjalori im</button>
+        <button class="nav-link" data-view="hives">Kosheret</button>
+        <button class="nav-link" data-view="community">Komuniteti</button>
       </nav>
       <label class="theme-picker" for="themeSelect">
         <span>Tema</span>
@@ -61,7 +63,7 @@
           </div>
           <div class="translation-grid">
             <div class="text-panel source-panel">
-              <div class="panel-head"><strong>Teksti për përkthim</strong><button id="pasteButton" class="text-action">Ngjit</button></div>
+              <div class="panel-head"><strong>Teksti për përkthim</strong><div class="panel-actions"><button id="importDocumentButton" class="text-action" title="Ngarko imazh ose dokument">Ngarko</button><button id="pasteButton" class="text-action">Ngjit</button></div></div>
               <textarea id="sourceText" spellcheck="true" placeholder="Shkruani një term ose frazë të bletarisë…"></textarea>
               <div class="panel-foot"><span id="sourceCount">0 karaktere</span><button id="clearButton" class="text-action">Pastro</button></div>
             </div>
@@ -110,6 +112,47 @@
             <div class="library-head"><div><h2>Termat e ruajtur</h2><p id="customCount">0 terma personalë</p></div><div class="library-actions"><button id="exportButton" class="outline-button">Eksporto</button><button id="importButton" class="outline-button">Importo</button></div></div>
             <div id="customList" class="custom-list"><p class="empty-state">Nuk keni shtuar ende terma personalë.</p></div>
           </aside>
+        </div>
+      </section>
+
+      <section id="hivesView" class="view">
+        <div class="view-header module-header"><p class="eyebrow">MY HIVES</p><h1>Kosheret e mia</h1><p>Ruani kontrollet, vendndodhjet dhe gjendjen e secilës koshere. Të dhënat qëndrojnë në këtë pajisje dhe punojnë edhe pa internet.</p></div>
+        <div class="hive-grid">
+          <form id="hiveForm" class="hive-form">
+            <div class="form-heading"><h2>Shto koshere</h2><p>Regjistro një njësi të re në bletoren tënde.</p></div>
+            <label>Emri i kosheres<input id="hiveName" required maxlength="80" placeholder="p.sh. Koshere 01 – Dajt"></label>
+            <label>Vendndodhja<input id="hiveLocation" required maxlength="120" placeholder="p.sh. Tiranë, Shqipëri"></label>
+            <label>Gjendja<select id="hiveStatus"><option value="healthy">E shëndetshme</option><option value="attention">Kërkon kontroll</option><option value="treatment">Në trajtim</option><option value="inactive">Joaktive</option></select></label>
+            <label>Kontrolli i fundit<input id="hiveInspection" type="date"></label>
+            <label>Shënime<textarea id="hiveNotes" maxlength="350" placeholder="Vëzhgime për pjellën, ushqimin ose trajtimin…"></textarea></label>
+            <button type="submit" class="primary-button">Ruaj kosheren <span>+</span></button>
+          </form>
+          <section class="hive-library" aria-label="Lista e koshereve">
+            <div class="library-head"><div><h2>Bletoja juaj</h2><p id="hiveCount">0 koshere të ruajtura</p></div></div>
+            <div id="hiveList" class="hive-list"><p class="empty-state">Nuk keni shtuar ende koshere. Përdorni formularin për të nisur regjistrin tuaj lokal.</p></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="communityView" class="view">
+        <div class="view-header module-header"><p class="eyebrow">COMMUNITY HIVES</p><h1>Komuniteti i bletarëve</h1><p>Ruani pyetje, përvoja dhe zgjidhje për bletarinë në një panel lokal. Mund t’i eksportoni më vonë për t’i ndarë me kolegët.</p></div>
+        <div class="community-grid">
+          <form id="communityForm" class="community-form">
+            <div class="form-heading"><h2>Nis një diskutim</h2><p>Postimi ruhet lokalisht në pajisjen tënde.</p></div>
+            <label>Emri / firma<input id="communityAuthor" required maxlength="60" placeholder="p.sh. Bletari i Tiranës"></label>
+            <label>Tema<select id="communityTopic"><option>Menaxhimi i kolonisë</option><option>Shëndeti dhe sëmundjet</option><option>Pajisje</option><option>Dimërimi</option><option>Bimët dhe kullota</option><option>Terminologji</option></select></label>
+            <label>Titulli<input id="communityTitle" required maxlength="120" placeholder="Pyetja ose përvoja juaj"></label>
+            <label>Përshkrimi<textarea id="communityBody" required maxlength="800" placeholder="Shkruani hollësitë që do t’u vlejnë bletarëve të tjerë…"></textarea></label>
+            <button type="submit" class="primary-button">Publiko lokalisht <span>+</span></button>
+          </form>
+          <section class="community-library" aria-label="Diskutime të ruajtura">
+            <div class="community-tools">
+              <input id="communitySearch" type="search" placeholder="Kërko diskutime…" aria-label="Kërko diskutime">
+              <select id="communityFilter" aria-label="Filtro diskutimet sipas temës"><option value="Të gjitha">Të gjitha temat</option><option>Menaxhimi i kolonisë</option><option>Shëndeti dhe sëmundjet</option><option>Pajisje</option><option>Dimërimi</option><option>Bimët dhe kullota</option><option>Terminologji</option></select>
+            </div>
+            <div class="community-actions"><p id="communityCount">0 diskutime lokale</p><div><button id="exportCommunityButton" type="button" class="outline-button">Eksporto</button><button id="importCommunityButton" type="button" class="outline-button">Importo</button></div></div>
+            <div id="communityList" class="community-list"><p class="empty-state">Nuk ka ende diskutime të ruajtura. Krijoni postimin e parë për këtë pajisje.</p></div>
+          </section>
         </div>
       </section>
     </main>

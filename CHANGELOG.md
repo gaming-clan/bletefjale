@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.4.0 — 2026-08-17
+- Restored the visible upload control in the translation panel for image OCR and PDF, DOCX, TXT, MD and CSV imports.
+- Activated My Hives as a local-first hive register with status, location, notes, inspection dates and one-click inspection updates.
+- Activated Community Hives as a local discussion board with creation, search, topic filters, usefulness counters, deletion and JSON export/import.
+- Extended the Electron file dialogs so each local export/import workflow can use a clear, dedicated title and filename.
+- Added automated regression checks for document import, OCR bridge, local hive records and community posts.
+
 ## 1.3.0 — 2026-08-17
 - Integrated five selectable visual themes from the supplied Stitch design collection: BletëFjalë, Midnight Hive, Forest Edge, Blossom Spring and Heritage.
 - Added a persistent theme selector to the desktop header; the selected theme is retained locally for future sessions.

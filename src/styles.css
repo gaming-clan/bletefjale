@@ -332,3 +332,62 @@ textarea::placeholder { color: #abb0a8; }
 :root[data-theme] textarea:focus { border-color: var(--honey); box-shadow: 0 0 0 3px color-mix(in srgb, var(--honey) 22%, transparent); }
 :root[data-theme] .delete-button { border-color: var(--line); background: var(--surface-alt); color: var(--danger); }
 :root[data-theme] .language-values span { color: var(--muted); }
+
+
+/* Modulet lokale My Hives dhe Community Hives */
+.panel-actions { display: inline-flex; align-items: center; gap: 12px; }
+.module-header { max-width: 820px; }
+.hive-grid, .community-grid { display: grid; grid-template-columns: minmax(300px, 370px) minmax(0, 1fr); align-items: start; gap: 24px; }
+.hive-form, .community-form, .hive-library, .community-library { border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+.hive-form, .community-form { padding: 23px; }
+.hive-form label, .community-form label { display: flex; flex-direction: column; gap: 7px; margin-top: 16px; color: var(--leaf); font-size: 12px; font-weight: 700; }
+.hive-form input, .hive-form select, .community-form input, .community-form select { height: 39px; padding: 0 10px; }
+.hive-form textarea, .community-form textarea { min-height: 92px; padding: 10px; border: 1px solid var(--line); border-radius: 8px; font-size: 13px; }
+.hive-form .primary-button, .community-form .primary-button { width: 100%; margin-top: 20px; }
+.form-heading h2, .hive-library h2 { margin: 0; font-size: 24px; }
+.form-heading p { margin: 6px 0 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
+.hive-library, .community-library { padding: 23px; }
+.hive-list, .community-list { display: grid; gap: 13px; margin-top: 16px; }
+.hive-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.hive-card, .community-post { border: 1px solid var(--line); border-radius: 12px; background: var(--surface-alt); padding: 18px; }
+.hive-card-head, .post-meta, .post-actions, .community-actions { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.hive-status, .community-topic { display: inline-flex; align-items: center; min-height: 25px; padding: 3px 9px; border-radius: 99px; font-size: 10px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+.status-healthy { background: color-mix(in srgb, var(--leaf) 17%, transparent); color: var(--leaf); }
+.status-attention { background: color-mix(in srgb, var(--honey) 17%, transparent); color: var(--honey-dark); }
+.status-treatment { background: color-mix(in srgb, var(--danger) 15%, transparent); color: var(--danger); }
+.status-inactive { background: color-mix(in srgb, var(--muted) 15%, transparent); color: var(--muted); }
+.hive-card h3, .community-post h3 { margin: 15px 0 6px; font-family: 'Fraunces', Georgia, serif; color: var(--leaf-dark); font-size: 20px; }
+.hive-location, .post-author { margin: 0; color: var(--muted); font-size: 12px; }
+.hive-metadata { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 17px 0 12px; padding-top: 13px; border-top: 1px solid var(--line); }
+.hive-metadata dt { color: var(--muted); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+.hive-metadata dd { margin: 5px 0 0; color: var(--ink); font-size: 12px; font-weight: 700; }
+.hive-notes, .post-body { margin: 13px 0; color: var(--muted); font-size: 13px; line-height: 1.5; white-space: pre-wrap; }
+.hive-inspection-button { width: 100%; margin-top: 4px; }
+.community-tools { display: grid; grid-template-columns: minmax(0, 1fr) 190px; gap: 10px; }
+.community-tools input, .community-tools select { height: 43px; padding: 0 12px; }
+.community-actions { padding: 15px 0; border-bottom: 1px solid var(--line); }
+.community-actions p { margin: 0; color: var(--muted); font-size: 12px; }
+.community-actions > div { display: flex; gap: 7px; }
+.post-meta { justify-content: flex-start; color: var(--muted); font-size: 11px; }
+.community-topic { background: color-mix(in srgb, var(--honey) 15%, transparent); color: var(--honey-dark); }
+.post-actions { margin-top: 16px; padding-top: 13px; border-top: 1px solid var(--line); }
+.community-like b { margin-left: 5px; }
+
+@media (max-width: 1120px) {
+  .topbar { padding: 0 28px; gap: 20px; }
+  .offline-badge { display: none; }
+  nav { gap: 14px; }
+  .nav-link { font-size: 12px; }
+}
+
+@media (max-width: 800px) {
+  .hive-grid, .community-grid { grid-template-columns: 1fr; }
+  .hive-list { grid-template-columns: 1fr; }
+  .community-tools { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 510px) {
+  .panel-actions { gap: 9px; }
+  .hive-metadata { grid-template-columns: 1fr; }
+  .community-actions { align-items: flex-start; flex-direction: column; }
+}

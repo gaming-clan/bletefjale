@@ -34,19 +34,19 @@ app.whenReady().then(() => {
     clipboard.writeText(String(text || ''));
     return true;
   });
-  ipcMain.handle('file:save-json', async (_event, content) => {
+  ipcMain.handle('file:save-json', async (_event, content, options = {}) => {
     const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
-      title: 'Ruaj fjalorin personal',
-      defaultPath: 'fjalori-im-i-bletarise.json',
+      title: options.title || 'Ruaj fjalorin personal',
+      defaultPath: options.defaultPath || 'fjalori-im-i-bletarise.json',
       filters: [{ name: 'Skedar JSON', extensions: ['json'] }]
     });
     if (canceled || !filePath) return { saved: false };
     fs.writeFileSync(filePath, content, 'utf8');
     return { saved: true, filePath };
   });
-  ipcMain.handle('file:open-json', async () => {
+  ipcMain.handle('file:open-json', async (_event, options = {}) => {
     const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
-      title: 'Ngarko fjalor personal',
+      title: options.title || 'Ngarko fjalor personal',
       properties: ['openFile'],
       filters: [{ name: 'Skedar JSON', extensions: ['json'] }]
     });
