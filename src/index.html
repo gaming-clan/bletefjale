@@ -21,7 +21,7 @@
         <button class="nav-link" data-view="glossary">Fjalori</button>
         <button class="nav-link" data-view="custom">Fjalori im</button>
       </nav>
-      <div class="header-actions"><button id="quickStartButton" class="quick-start-button" title="Hap udhëzuesin e shpejtë">? Quick Start</button><div class="offline-badge"><span></span> Punon pa internet</div></div>
+      <div class="offline-badge"><span></span> Punon pa internet</div>
     </header>
 
     <main>
@@ -30,6 +30,11 @@
           <p class="eyebrow">PËR BLETARË, VETERINERË DHE STUDENTË</p>
           <h1>Fjalët e sakta për<br><em>çdo koshere.</em></h1>
           <p class="hero-copy">Përkthim i specializuar i termave, praktikave dhe sëmundjeve të bletarisë. Fjalori teknik përparësohet gjithmonë.</p>
+          <div class="hero-stats" aria-label="Mbulimi i fjalorit">
+            <span id="supportedLanguages">8 gjuhë</span>
+            <span id="termTotal">100+ terma teknikë</span>
+            <span>Terminologji bletarie</span>
+          </div>
         </section>
 
         <section class="translator-card" aria-label="Përkthyesi">
@@ -46,9 +51,9 @@
           </div>
           <div class="translation-grid">
             <div class="text-panel source-panel">
-              <div class="panel-head"><strong>Teksti për përkthim</strong><div class="import-actions"><button id="documentImportButton" class="text-action">Ngarko skedar</button><button id="pasteButton" class="text-action">Ngjit</button></div></div>
+              <div class="panel-head"><strong>Teksti për përkthim</strong><button id="pasteButton" class="text-action">Ngjit</button></div>
               <textarea id="sourceText" spellcheck="true" placeholder="Shkruani një term ose frazë të bletarisë…"></textarea>
-              <div class="panel-foot"><span><span id="sourceCount">0 karaktere</span><span id="fileInfo"></span></span><button id="clearButton" class="text-action">Pastro</button></div>
+              <div class="panel-foot"><span id="sourceCount">0 karaktere</span><button id="clearButton" class="text-action">Pastro</button></div>
             </div>
             <div class="translate-arrow" aria-hidden="true">→</div>
             <div class="text-panel result-panel">
@@ -58,7 +63,7 @@
             </div>
           </div>
           <div class="translate-bottom">
-            <span id="statusMessage" role="status">Shkruani një term ose ngarkoni imazh, PDF, DOCX apo dokument tekstor.</span>
+            <span id="statusMessage" role="status">Shkruani ose zgjidhni një term nga sugjerimet.</span>
             <button id="translateButton" class="primary-button">Përkthe tani <span>→</span></button>
           </div>
         </section>
@@ -70,7 +75,7 @@
       </section>
 
       <section id="glossaryView" class="view">
-        <div class="view-header"><p class="eyebrow">REFERENCË TEKNIKE</p><h1>Fjalori i bletarisë</h1><p>Kërkoni sipas termit, përkufizimit ose kategorisë në gjuhët e mbështetura.</p></div>
+        <div class="view-header"><p class="eyebrow">REFERENCË TEKNIKE</p><h1>Fjalori i bletarisë</h1><p>Kërkoni sipas termit, përkufizimit, sinonimit ose kategorisë në të tetë gjuhët e mbështetura.</p></div>
         <div class="glossary-toolbar">
           <input id="glossarySearch" type="search" placeholder="Kërko p.sh. varroa, propolis, mbretëreshë…" aria-label="Kërko në fjalor">
           <select id="categoryFilter" aria-label="Filtro sipas kategorisë"></select>
@@ -98,22 +103,6 @@
         </div>
       </section>
     </main>
-  </div>
-  <div id="quickStartModal" class="modal-backdrop" aria-hidden="true">
-    <section class="quick-start-modal" role="dialog" aria-modal="true" aria-labelledby="quickStartTitle">
-      <button id="closeQuickStart" class="modal-close" aria-label="Mbyll udhëzuesin">×</button>
-      <p class="eyebrow">NISJA E SHPEJTË</p>
-      <h2 id="quickStartTitle">Përkthe në pak hapa</h2>
-      <p class="quick-start-intro">BletëFjalë është ndërtuar për punën e përditshme të bletarëve, teknikëve dhe studentëve.</p>
-      <div class="quick-start-steps">
-        <div class="quick-step"><b>1</b><div><strong>Zgjidh gjuhët</strong><p>Përcaktoni gjuhën burimore dhe gjuhën e synuar, përfshirë turqishten dhe greqishten.</p></div></div>
-        <div class="quick-step"><b>2</b><div><strong>Shkruaj ose ngarko</strong><p>Shkruani tekstin, ose klikoni <strong>Ngarko skedar</strong> për imazh, PDF, DOCX, TXT, MD ose CSV.</p></div></div>
-        <div class="quick-step"><b>3</b><div><strong>Përkthe dhe kopjo</strong><p>Klikoni <strong>Përkthe tani</strong>, pastaj përdorni <strong>Kopjo</strong> për ta marrë rezultatin.</p></div></div>
-        <div class="quick-step"><b>4</b><div><strong>Ruaj termat e tu</strong><p>Te <strong>Fjalori im</strong> mund të shtoni, eksportoni dhe importoni terminologji personale.</p></div></div>
-      </div>
-      <div class="quick-start-note"><strong>Këshillë:</strong> Përdorni <strong>Ctrl + Enter</strong> për përkthim të shpejtë. Për PDF të skanuar, ngarkoni faqen si imazh.</div>
-      <button id="startTranslatingButton" class="primary-button modal-primary">Fillo përkthimin <span>→</span></button>
-    </section>
   </div>
   <div id="toast" class="toast" role="alert"></div>
   <script src="glossary.js"></script>

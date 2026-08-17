@@ -1,59 +1,60 @@
 {
-  "name": "bletefjale",
-  "version": "1.1.0",
-  "description": "Përkthyes shumëgjuhësh për terminologjinë profesionale të bletarisë.",
-  "main": "main.js",
-  "author": "BletëFjalë",
-  "license": "MIT",
-  "scripts": {
-    "start": "electron .",
-    "build": "electron-builder --win portable --x64",
-    "lint": "node --check main.js && node --check preload.js && node --check src/renderer.js && node --check src/glossary.js",
-    "build:dir": "electron-builder --win --x64 --dir",
-    "build:portable": "electron-builder --win portable --x64"
-  },
-  "build": {
-    "appId": "com.bletefjale.desktop",
-    "productName": "BletëFjalë",
-    "artifactName": "BleteFjale-${version}-Windows-Portable.${ext}",
-    "files": [
-      "src/**/*",
-      "assets/**/*",
-      "main.js",
-      "preload.js",
-      "package.json",
-      "README.md",
-      "PRIVACY.md",
-      "SECURITY.md"
-    ],
-    "win": {
-      "target": [
-        "portable"
-      ],
-      "icon": "assets/app-icon.ico"
-    },
-    "portable": {
-      "artifactName": "BleteFjale-${version}-Windows-Portable.${ext}"
-    },
-    "asar": true,
-    "asarUnpack": [
-      "node_modules/tesseract.js/**",
-      "node_modules/tesseract.js-core/**"
-    ]
-  },
-  "devDependencies": {
-    "electron": "^37.2.6",
-    "electron-builder": "^26.0.12"
-  },
-  "allowScripts": {
-    "electron@37.10.3": true,
-    "electron-builder@26.15.3": true
-  },
-  "dependencies": {
-    "mammoth": "^1.11.0",
-    "pdf-parse": "^1.1.1",
-    "png-to-ico": "^2.1.8",
-    "tesseract.js": "^5.1.1"
-  },
-  "private": true
+    "name":  "bletefjale",
+    "version":  "1.2.0",
+    "description":  "Përkthyes shumëgjuhësh për terminologjinë profesionale të bletarisë.",
+    "main":  "main.js",
+    "author":  "BletëFjalë",
+    "license":  "MIT",
+    "scripts":  {
+                    "start":  "electron .",
+                    "build":  "electron-builder --win portable --x64",
+                    "lint":  "node --check main.js \u0026\u0026 node --check preload.js \u0026\u0026 node --check src/renderer.js \u0026\u0026 node --check src/glossary.js \u0026\u0026 node tests/glossary.test.js",
+                    "build:dir":  "electron-builder --win --x64 --dir",
+                    "build:portable":  "electron-builder --win portable --x64",
+                    "test:glossary":  "node tests/glossary.test.js"
+                },
+    "build":  {
+                  "appId":  "com.bletefjale.desktop",
+                  "productName":  "BletëFjalë",
+                  "artifactName":  "BleteFjale-${version}-Windows-Portable.${ext}",
+                  "files":  [
+                                "src/**/*",
+                                "assets/**/*",
+                                "main.js",
+                                "preload.js",
+                                "package.json",
+                                "README.md",
+                                "PRIVACY.md",
+                                "SECURITY.md"
+                            ],
+                  "win":  {
+                              "target":  [
+                                             "portable"
+                                         ],
+                              "icon":  "assets/app-icon.ico"
+                          },
+                  "portable":  {
+                                   "artifactName":  "BleteFjale-${version}-Windows-Portable.${ext}"
+                               },
+                  "asar":  true,
+                  "asarUnpack":  [
+                                     "node_modules/tesseract.js/**",
+                                     "node_modules/tesseract.js-core/**"
+                                 ]
+              },
+    "devDependencies":  {
+                            "electron":  "^37.2.6",
+                            "electron-builder":  "^26.0.12"
+                        },
+    "allowScripts":  {
+                         "electron@37.10.3":  true,
+                         "electron-builder@26.15.3":  true
+                     },
+    "dependencies":  {
+                         "mammoth":  "^1.11.0",
+                         "pdf-parse":  "^1.1.1",
+                         "png-to-ico":  "^2.1.8",
+                         "tesseract.js":  "^5.1.1"
+                     },
+    "private":  true
 }

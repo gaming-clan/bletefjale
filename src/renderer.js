@@ -27,7 +27,9 @@ function normalize(value) {
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/[’']/g, "'")
-    .toLocaleLowerCase()
+    .replace(/ı/g, 'i')
+    .toLocaleLowerCase('und')
+    .replace(/\s+/g, ' ')
     .trim();
 }
 
@@ -38,6 +40,12 @@ function escapeRegex(value) {
 function sourceLanguage() { return $('#sourceLanguage').value; }
 function targetLanguage() { return $('#targetLanguage').value; }
 function allTerms() { return [...customTerms, ...GLOSSARY]; }
+
+function variantsFor(entry, language) {
+  const canonical = entry.t?.[language];
+  const aliases = Array.isArray(entry.a?.[language]) ? entry.a[language] : [];
+  return [canonical, ...aliases].filter(Boolean);
+}
 
 function populateLanguageSelect(select, selected) {
   select.innerHTML = LANGUAGES.map(language => `<option value="${language.id}">${language.label}</option>`).join('');
@@ -50,11 +58,13 @@ function initializeLanguageControls() {
   populateLanguageSelect($('#customSourceLanguage'), 'sq');
   populateLanguageSelect($('#customTargetLanguage'), 'en');
   $('#categoryFilter').innerHTML = CATEGORIES.map(category => `<option value="${category}">${category}</option>`).join('');
+  $('#supportedLanguages').textContent = `${LANGUAGES.length} gjuhë`;
+  $('#termTotal').textContent = `${GLOSSARY.length}+ terma teknikë`;
 }
 
 function getExactEntry(text, from) {
   const normalizedText = normalize(text);
-  return allTerms().find(entry => normalize(entry.t[from]) === normalizedText);
+  return allTerms().find(entry => variantsFor(entry, from).some(value => normalize(value) === normalizedText));
 }
 
 function translatedValue(entry, to) {
@@ -73,17 +83,21 @@ function createTextTranslation(text, from, to) {
   let output = original;
   const matches = [];
   const entries = allTerms()
-    .filter(entry => entry.t[from] && entry.t[to])
-    .sort((a, b) => b.t[from].length - a.t[from].length);
+    .filter(entry => variantsFor(entry, from).length && entry.t[to])
+    .flatMap(entry => variantsFor(entry, from).map(source => ({ entry, source })))
+    .sort((a, b) => b.source.length - a.source.length);
 
-  entries.forEach(entry => {
-    const source = entry.t[from];
+  const matchedIds = new Set();
+  entries.forEach(({ entry, source }) => {
     const replacement = entry.t[to];
-    const expression = new RegExp(escapeRegex(source), 'giu');
+    const expression = new RegExp(`(^|[^\\p{L}\\p{N}])${escapeRegex(source)}(?=$|[^\\p{L}\\p{N}])`, 'giu');
     if (expression.test(output)) {
       expression.lastIndex = 0;
-      output = output.replace(expression, replacement);
-      matches.push(entry);
+      output = output.replace(expression, (_, prefix) => `${prefix}${replacement}`);
+      if (!matchedIds.has(entry.id)) {
+        matches.push(entry);
+        matchedIds.add(entry.id);
+      }
     }
   });
   return { text: output, matches, exact: false };
@@ -143,14 +157,17 @@ function showToast(message) {
 
 function renderQuickTerms() {
   const from = sourceLanguage();
-  $('#quickTerms').innerHTML = QUICK_TERM_IDS.map(index => {
-    const entry = GLOSSARY[index];
-    return `<button class="term-chip" data-term="${index}"><span>${entry.t[from]}</span><small>${entry.c}</small></button>`;
-  }).join('');
+  const quickTerms = QUICK_TERM_IDS
+    .map(id => GLOSSARY.find(entry => entry.id === id))
+    .filter(Boolean);
+  $('#quickTerms').innerHTML = quickTerms.map(entry =>
+    `<button class="term-chip" data-term="${entry.id}"><span>${entry.t[from] || entry.t.sq}</span><small>${entry.c}</small></button>`
+  ).join('');
   $$('#quickTerms .term-chip').forEach(button => {
     button.addEventListener('click', () => {
-      const entry = GLOSSARY[Number(button.dataset.term)];
-      $('#sourceText').value = entry.t[sourceLanguage()];
+      const entry = GLOSSARY.find(item => item.id === button.dataset.term);
+      if (!entry) return;
+      $('#sourceText').value = entry.t[sourceLanguage()] || entry.t.sq;
       updateSourceCount();
       translate();
     });
@@ -160,7 +177,8 @@ function renderQuickTerms() {
 function glossaryMatches(entry, query, category) {
   if (category !== 'Të gjitha' && entry.c !== category) return false;
   if (!query) return true;
-  const haystack = [entry.c, entry.d, ...Object.values(entry.t)].join(' ');
+  const aliases = Object.values(entry.a || {}).flat();
+  const haystack = [entry.c, entry.d, ...Object.values(entry.t || {}), ...aliases].join(' ');
   return normalize(haystack).includes(normalize(query));
 }
 
@@ -170,20 +188,21 @@ function renderGlossary() {
   const from = sourceLanguage();
   const to = targetLanguage();
   const matches = GLOSSARY.filter(entry => glossaryMatches(entry, query, category));
-  $('#glossaryCount').textContent = `${matches.length} nga ${GLOSSARY.length} terma`;
-  $('#glossaryList').innerHTML = matches.length ? matches.map((entry, index) => `
-    <article class="glossary-item" tabindex="0" data-glossary-index="${GLOSSARY.indexOf(entry)}">
+  $('#glossaryCount').textContent = `${matches.length} nga ${GLOSSARY.length} terma · ${LANGUAGES.length} gjuhë`;
+  $('#glossaryList').innerHTML = matches.length ? matches.map(entry => `
+    <article class="glossary-item" tabindex="0" data-glossary-id="${entry.id}">
       <div class="category-tag">${entry.c}</div>
-      <div class="term-pair"><strong>${entry.t[from]}</strong><span>→</span><strong>${entry.t[to]}</strong></div>
+      <div class="term-pair"><strong>${entry.t[from] || entry.t.sq}</strong><span>→</span><strong>${entry.t[to] || entry.t.sq}</strong></div>
       <p>${entry.d}</p>
-      <div class="language-values">${LANGUAGES.map(language => `<span><b>${language.label}</b>${entry.t[language.id]}</span>`).join('')}</div>
+      <div class="language-values">${LANGUAGES.map(language => `<span><b>${language.label}</b>${entry.t[language.id] || '—'}</span>`).join('')}</div>
     </article>
   `).join('') : '<p class="empty-state">Nuk u gjet asnjë term që përputhet me kërkimin tuaj.</p>';
   $$('#glossaryList .glossary-item').forEach(item => {
     item.addEventListener('click', () => {
-      const entry = GLOSSARY[Number(item.dataset.glossaryIndex)];
+      const entry = GLOSSARY.find(candidate => candidate.id === item.dataset.glossaryId);
+      if (!entry) return;
       showView('translate');
-      $('#sourceText').value = entry.t[sourceLanguage()];
+      $('#sourceText').value = entry.t[sourceLanguage()] || entry.t.sq;
       updateSourceCount();
       translate();
     });
@@ -219,37 +238,6 @@ function showView(viewName) {
   $$('.nav-link').forEach(button => button.classList.toggle('active', button.dataset.view === viewName));
   if (viewName === 'glossary') renderGlossary();
   if (viewName === 'custom') renderCustomTerms();
-}
-
-
-async function importSourceDocument() {
-  const button = $('#documentImportButton');
-  try {
-    button.disabled = true;
-    button.textContent = 'Duke lexuar…';
-    $('#statusMessage').textContent = 'Po lexohet skedari. Për imazhe, njohja e tekstit mund të marrë pak kohë.';
-    const result = await window.desktopAPI.importDocument(sourceLanguage());
-    if (result.canceled) {
-      $('#statusMessage').textContent = 'Ngarkimi i skedarit u anulua.';
-      return;
-    }
-    if (result.error) {
-      $('#statusMessage').textContent = result.error;
-      showToast(result.error);
-      return;
-    }
-    $('#sourceText').value = result.text;
-    $('#fileInfo').textContent = ' · ' + (result.type === 'image' ? 'Imazh' : 'Dokument') + ': ' + result.fileName;
-    updateSourceCount();
-    translate();
-    $('#statusMessage').textContent = 'Teksti u lexua nga “' + result.fileName + '”. U aplikua fjalori teknik i bletarisë.';
-  } catch {
-    $('#statusMessage').textContent = 'Skedari nuk mund të lexohet.';
-    showToast('Skedari nuk mund të lexohet.');
-  } finally {
-    button.disabled = false;
-    button.textContent = 'Ngarko skedar';
-  }
 }
 
 async function pasteText() {
@@ -349,38 +337,18 @@ async function importCustomTerms() {
   }
 }
 
-
-function openQuickStart() {
-  const modal = $('#quickStartModal');
-  modal.classList.add('visible');
-  modal.setAttribute('aria-hidden', 'false');
-}
-
-function closeQuickStart() {
-  const modal = $('#quickStartModal');
-  modal.classList.remove('visible');
-  modal.setAttribute('aria-hidden', 'true');
-}
-
 function setupEvents() {
-  $('.nav-link').forEach(button => button.addEventListener('click', () => showView(button.dataset.view)));
-  $('#quickStartButton').addEventListener('click', openQuickStart);
-  $('#closeQuickStart').addEventListener('click', closeQuickStart);
-  $('#startTranslatingButton').addEventListener('click', closeQuickStart);
-  $('#quickStartModal').addEventListener('click', event => { if (event.target.id === 'quickStartModal') closeQuickStart(); });
-  document.addEventListener('keydown', event => { if (event.key === 'Escape') closeQuickStart(); });
+  $$('.nav-link').forEach(button => button.addEventListener('click', () => showView(button.dataset.view)));
   $$('[data-go="glossary"]').forEach(button => button.addEventListener('click', () => showView('glossary')));
   $('#sourceText').addEventListener('input', updateSourceCount);
   $('#sourceText').addEventListener('keydown', event => {
     if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') translate();
   });
   $('#translateButton').addEventListener('click', translate);
-  $('#documentImportButton').addEventListener('click', importSourceDocument);
   $('#pasteButton').addEventListener('click', pasteText);
   $('#copyButton').addEventListener('click', copyResult);
   $('#clearButton').addEventListener('click', () => {
     $('#sourceText').value = '';
-    $('#fileInfo').textContent = '';
     updateSourceCount();
     setResult('');
     $('#statusMessage').textContent = 'Fusha u pastrua.';
