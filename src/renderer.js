@@ -4,6 +4,7 @@ const CUSTOM_STORAGE_KEY = 'bletefjale-custom-glossary-v1';
 const THEME_STORAGE_KEY = 'bletefjale-theme-v1';
 const HIVE_STORAGE_KEY = 'bletefjale-hives-v1';
 const COMMUNITY_STORAGE_KEY = 'bletefjale-community-v1';
+const BACKUP_SCHEMA_VERSION = 1;
 const AVAILABLE_THEMES = new Set([
   'bletefjale',
   'midnight-hive',
@@ -16,23 +17,23 @@ const AVAILABLE_THEMES = new Set([
 // offline turqisht–shqip dhe plotësojnë, jo zëvendësojnë, fjalorin teknik.
 const DOCUMENT_LABEL_PHRASES = {
   'tr:sq': [
-    { id: 'doc-varotem-apply-between-frames', source: 'Arıların üzerine temas edecek şekilde tüm çerçeve aralarına uygulayarak, bütün koloninin tüketmesi sağlanmalıdır', target: 'Aplikojeni ndërmjet të gjitha kornizave, duke siguruar kontakt me bletët, në mënyrë që ta konsumojë e gjithë kolonia.' },
-    { id: 'doc-varotem-temperature-application', source: 'Hava sıcaklığının 14°C ve üzerinde olduğu her dönemde püskürtme uygulaması, 10°C ve üzerinde olduğu her dönemde damlatma uygulaması yapılması tavsiye edilir', target: 'Rekomandohet aplikimi me spërkatje kur temperatura është 14°C ose më e lartë dhe aplikimi me pikim kur temperatura është 10°C ose më e lartë.', aliases: ['Hava sıcaklığının 14*C ve üzerinde olduğu her dönemde püskürtme uygulaması, 10*C ve üzerinde olduğu her dönemde damlatma uygulaması yapılması tavsiye edilir'] },
-    { id: 'doc-varotem-dose-per-frame', source: 'Her çerçeve arasına 2 ml püskürtme veya damlatma şeklinde uygulayınız', target: 'Aplikoni 2 ml me spërkatje ose me pikim ndërmjet çdo kornize.', aliases: ['Her çevçeve arasına 2 ml püskürtme veya damlatma şeklinde uygulayınız'] },
-    { id: 'doc-varotem-no-honey-residue', source: 'Balda kalıntı bırakmaz, bal akım döneminde dahi kullanılabilir', target: 'Nuk lë mbetje në mjaltë dhe mund të përdoret edhe gjatë rrjedhës së mjaltit.' },
-    { id: 'doc-varotem-organic-suitable', source: 'Organik arı yetiştiriciliğine uygun olarak geliştirilmiştir', target: 'Është zhvilluar për përdorim të përshtatshëm në bletarinë organike.' },
-    { id: 'doc-varotem-close-cap', source: 'Uygulama sonrası kapağı yeniden çevirerek kapalı olduğundan emin olunuz', target: 'Pas aplikimit, sigurohuni që kapaku të jetë mbyllur sërish.' },
-    { id: 'doc-varotem-external-parasites', source: 'Dış parazitlere karşı arıların fizyolojik korunmasını desteklenmesine yardımcı olur', target: 'Ndihmon në mbështetjen e mbrojtjes fiziologjike të bletëve kundër parazitëve të jashtëm.' },
-    { id: 'doc-varotem-strengthens-colony', source: 'Bal arılarında dış parazitlere karşı koloniyi güçlendirir', target: 'Forcon koloninë e bletëve të mjaltit kundër parazitëve të jashtëm.' },
-    { id: 'doc-varotem-supports-brood', source: 'Yavru gelişimini destekler', target: 'Mbështet zhvillimin e pjellës.' },
-    { id: 'doc-varotem-digestion-immunity', source: 'Sindirim sistemini düzenler ve bağışıklık sistemini güçlendirmeye yardımcı olur', target: 'Ndihmon rregullimin e sistemit tretës dhe forcimin e sistemit imunitar.' },
-    { id: 'doc-varotem-wingless-bees', source: 'Kanatsız arı çıkmasını önlemeye yardımcı olur', target: 'Ndihmon në parandalimin e daljes së bletëve pa krahë.' },
-    { id: 'doc-varotem-no-special-storage', source: 'Özel saklama koşulu yoktur', target: 'Nuk kërkohen kushte të veçanta ruajtjeje.' },
-    { id: 'doc-varotem-use-opened-packages', source: 'Açılmış ambalajları kısa sürede uygulayınız', target: 'Përdorini paketimet e hapura brenda një kohe të shkurtër.' },
-    { id: 'doc-varotem-no-chemical-components', source: 'Renklendirici, koruyucu ve hiçbir kimyasal bileşen içermez', target: 'Nuk përmban ngjyrues, konservues ose përbërës kimikë.' },
-    { id: 'doc-inverturk-add-to-mixture', source: 'Tabloda belirtilen üretim miktarınıza göre İnvertürk ilave ederek karıştırıcıyı 1,5 saat boyunca çalıştırınız', target: 'Shtoni İnvertürk sipas sasisë së prodhimit të treguar në tabelë dhe mbajeni përzierësin në punë për 1,5 orë.' },
-    { id: 'doc-inverturk-give-to-bees', source: 'elde ettiğiniz invert şekeri gıdaya uygun ambalajlarda bal arılarının besin ihtiyacını desteklemek amaçlı verebilirsiniz', target: 'Sheqerin invert të përgatitur mund ta jepni në ambalazhe të përshtatshme për ushqim, për të mbështetur nevojat ushqimore të bletëve të mjaltit.' },
-    { id: 'doc-inverturk-invert-sugar', source: 'İnvert şeker yapımında, fondan ve kek yapımında ürünlerin amaçlı verebilirsiniz', target: 'Mund të përdoret për përgatitjen e sheqerit invert, fondantit dhe kekut ushqimor.' }
+    { id: 'doc-varotem-apply-between-frames', source: 'Arıların üzerine temas edecek şekilde tüm çerçeve aralarına uygulayarak, bütün koloninin tüketmesi sağlanmalıdır', target: 'Aplikojeni ndërmjet të gjitha kornizave, duke siguruar kontakt me bletët, në mënyrë që ta konsumojë e gjithë kolonia.', category: 'Etiketa & Trajtime' },
+    { id: 'doc-varotem-temperature-application', source: 'Hava sıcaklığının 14°C ve üzerinde olduğu her dönemde püskürtme uygulaması, 10°C ve üzerinde olduğu her dönemde damlatma uygulaması yapılması tavsiye edilir', target: 'Rekomandohet aplikimi me spërkatje kur temperatura është 14°C ose më e lartë dhe aplikimi me pikim kur temperatura është 10°C ose më e lartë.', aliases: ['Hava sıcaklığının 14*C ve üzerinde olduğu her dönemde püskürtme uygulaması, 10*C ve üzerinde olduğu her dönemde damlatma uygulaması yapılması tavsiye edilir'], category: 'Etiketa & Trajtime' },
+    { id: 'doc-varotem-dose-per-frame', source: 'Her çerçeve arasına 2 ml püskürtme veya damlatma şeklinde uygulayınız', target: 'Aplikoni 2 ml me spërkatje ose me pikim ndërmjet çdo kornize.', aliases: ['Her çevçeve arasına 2 ml püskürtme veya damlatma şeklinde uygulayınız'], category: 'Etiketa & Trajtime' },
+    { id: 'doc-varotem-no-honey-residue', source: 'Balda kalıntı bırakmaz, bal akım döneminde dahi kullanılabilir', target: 'Nuk lë mbetje në mjaltë dhe mund të përdoret edhe gjatë rrjedhës së mjaltit.', category: 'Etiketa & Trajtime' },
+    { id: 'doc-varotem-organic-suitable', source: 'Organik arı yetiştiriciliğine uygun olarak geliştirilmiştir', target: 'Është zhvilluar për përdorim të përshtatshëm në bletarinë organike.', category: 'Etiketa & Trajtime' },
+    { id: 'doc-varotem-close-cap', source: 'Uygulama sonrası kapağı yeniden çevirerek kapalı olduğundan emin olunuz', target: 'Pas aplikimit, sigurohuni që kapaku të jetë mbyllur sërish.', category: 'Etiketa & Trajtime' },
+    { id: 'doc-varotem-external-parasites', source: 'Dış parazitlere karşı arıların fizyolojik korunmasını desteklenmesine yardımcı olur', target: 'Ndihmon në mbështetjen e mbrojtjes fiziologjike të bletëve kundër parazitëve të jashtëm.', category: 'Etiketa & Trajtime' },
+    { id: 'doc-varotem-strengthens-colony', source: 'Bal arılarında dış parazitlere karşı koloniyi güçlendirir', target: 'Forcon koloninë e bletëve të mjaltit kundër parazitëve të jashtëm.', category: 'Etiketa & Trajtime' },
+    { id: 'doc-varotem-supports-brood', source: 'Yavru gelişimini destekler', target: 'Mbështet zhvillimin e pjellës.', category: 'Etiketa & Trajtime' },
+    { id: 'doc-varotem-digestion-immunity', source: 'Sindirim sistemini düzenler ve bağışıklık sistemini güçlendirmeye yardımcı olur', target: 'Ndihmon rregullimin e sistemit tretës dhe forcimin e sistemit imunitar.', category: 'Etiketa & Trajtime' },
+    { id: 'doc-varotem-wingless-bees', source: 'Kanatsız arı çıkmasını önlemeye yardımcı olur', target: 'Ndihmon në parandalimin e daljes së bletëve pa krahë.', category: 'Etiketa & Trajtime' },
+    { id: 'doc-varotem-no-special-storage', source: 'Özel saklama koşulu yoktur', target: 'Nuk kërkohen kushte të veçanta ruajtjeje.', category: 'Etiketa & Trajtime' },
+    { id: 'doc-varotem-use-opened-packages', source: 'Açılmış ambalajları kısa sürede uygulayınız', target: 'Përdorini paketimet e hapura brenda një kohe të shkurtër.', category: 'Etiketa & Trajtime' },
+    { id: 'doc-varotem-no-chemical-components', source: 'Renklendirici, koruyucu ve hiçbir kimyasal bileşen içermez', target: 'Nuk përmban ngjyrues, konservues ose përbërës kimikë.', category: 'Etiketa & Trajtime' },
+    { id: 'doc-inverturk-add-to-mixture', source: 'Tabloda belirtilen üretim miktarınıza göre İnvertürk ilave ederek karıştırıcıyı 1,5 saat boyunca çalıştırınız', target: 'Shtoni İnvertürk sipas sasisë së prodhimit të treguar në tabelë dhe mbajeni përzierësin në punë për 1,5 orë.', category: 'Ushqim & Etiketa' },
+    { id: 'doc-inverturk-give-to-bees', source: 'elde ettiğiniz invert şekeri gıdaya uygun ambalajlarda bal arılarının besin ihtiyacını desteklemek amaçlı verebilirsiniz', target: 'Sheqerin invert të përgatitur mund ta jepni në ambalazhe të përshtatshme për ushqim, për të mbështetur nevojat ushqimore të bletëve të mjaltit.', category: 'Ushqim & Etiketa' },
+    { id: 'doc-inverturk-invert-sugar', source: 'İnvert şeker yapımında, fondan ve kek yapımında ürünlerin amaçlı verebilirsiniz', target: 'Mund të përdoret për përgatitjen e sheqerit invert, fondantit dhe kekut ushqimor.', category: 'Ushqim & Etiketa' }
   ]
 };
 
@@ -40,6 +41,8 @@ let customTerms = loadCustomTerms();
 let hives = loadStoredItems(HIVE_STORAGE_KEY, validHive);
 let communityPosts = loadStoredItems(COMMUNITY_STORAGE_KEY, validCommunityPost);
 let activeView = 'translate';
+let lastOcrResult = null;
+let lastTranslationResult = null;
 
 function loadCustomTerms() {
   try {
@@ -100,8 +103,11 @@ function savedTheme() {
 
 function applyTheme(theme, persist = true) {
   const resolvedTheme = AVAILABLE_THEMES.has(theme) ? theme : 'bletefjale';
-  document.documentElement.dataset.theme = resolvedTheme;
-  $('#themeSelect').value = resolvedTheme;
+  if (document.documentElement) {
+    document.documentElement.dataset.theme = resolvedTheme;
+  }
+  const themeSelect = $('#themeSelect');
+  if (themeSelect) themeSelect.value = resolvedTheme;
   if (persist) {
     try {
       localStorage.setItem(THEME_STORAGE_KEY, resolvedTheme);
@@ -113,7 +119,10 @@ function applyTheme(theme, persist = true) {
 
 function initializeThemeControl() {
   applyTheme(savedTheme(), false);
-  $('#themeSelect').addEventListener('change', event => applyTheme(event.target.value));
+  const themeSelect = $('#themeSelect');
+  if (themeSelect) {
+    themeSelect.addEventListener('change', event => applyTheme(event.target.value));
+  }
 }
 
 function normalize(value) {
@@ -136,14 +145,25 @@ function phraseExpression(source) {
   return new RegExp(`(^|[^\\p{L}\\p{N}])${flexibleWhitespace}(?=$|[^\\p{L}\\p{N}])`, 'giu');
 }
 
-function sourceLanguage() { return $('#sourceLanguage').value; }
-function targetLanguage() { return $('#targetLanguage').value; }
-function allTerms() { return [...customTerms, ...GLOSSARY]; }
+function sourceLanguage() {
+  const select = $('#sourceLanguage');
+  return select ? select.value : 'sq';
+}
+
+function targetLanguage() {
+  const select = $('#targetLanguage');
+  return select ? select.value : 'en';
+}
+
+function allTerms() {
+  return [...customTerms, ...(typeof GLOSSARY !== 'undefined' ? GLOSSARY : [])];
+}
 
 function documentPhraseEntries(from, to) {
   const phrases = DOCUMENT_LABEL_PHRASES[`${from}:${to}`] || [];
   return phrases.map(phrase => ({
     id: phrase.id,
+    c: phrase.category || 'Etiketë e Verifikuar',
     t: { [from]: phrase.source, [to]: phrase.target },
     a: { [from]: phrase.aliases || [] }
   }));
@@ -160,6 +180,7 @@ function variantsFor(entry, language) {
 }
 
 function populateLanguageSelect(select, selected) {
+  if (!select || typeof LANGUAGES === 'undefined') return;
   select.innerHTML = LANGUAGES.map(language => `<option value="${language.id}">${language.label}</option>`).join('');
   select.value = selected;
 }
@@ -169,9 +190,14 @@ function initializeLanguageControls() {
   populateLanguageSelect($('#targetLanguage'), 'en');
   populateLanguageSelect($('#customSourceLanguage'), 'sq');
   populateLanguageSelect($('#customTargetLanguage'), 'en');
-  $('#categoryFilter').innerHTML = CATEGORIES.map(category => `<option value="${category}">${category}</option>`).join('');
-  $('#supportedLanguages').textContent = `${LANGUAGES.length} gjuhë`;
-  $('#termTotal').textContent = `${GLOSSARY.length}+ terma teknikë`;
+  const catFilter = $('#categoryFilter');
+  if (catFilter && typeof CATEGORIES !== 'undefined') {
+    catFilter.innerHTML = CATEGORIES.map(category => `<option value="${category}">${category}</option>`).join('');
+  }
+  const supLang = $('#supportedLanguages');
+  if (supLang && typeof LANGUAGES !== 'undefined') supLang.textContent = `${LANGUAGES.length} gjuhë`;
+  const termTot = $('#termTotal');
+  if (termTot && typeof GLOSSARY !== 'undefined') termTot.textContent = `${GLOSSARY.length}+ terma teknikë`;
 }
 
 function getExactEntry(text, from) {
@@ -180,7 +206,7 @@ function getExactEntry(text, from) {
 }
 
 function translatedValue(entry, to) {
-  return entry.t[to] || null;
+  return entry.t?.[to] || null;
 }
 
 function createTextTranslation(text, from, to) {
@@ -195,7 +221,7 @@ function createTextTranslation(text, from, to) {
   let output = original;
   const matches = [];
   const entries = translationTerms(from, to)
-    .filter(entry => variantsFor(entry, from).length && entry.t[to])
+    .filter(entry => variantsFor(entry, from).length && entry.t?.[to])
     .flatMap(entry => variantsFor(entry, from).map(source => ({ entry, source })))
     .sort((a, b) => b.source.length - a.source.length);
 
@@ -219,69 +245,135 @@ function formatCount(count) {
   return `${count} ${count === 1 ? 'karakter' : 'karaktere'}`;
 }
 
+function renderTranslationBreakdown(matches = [], rawSource = '', translatedText = '') {
+  const breakdownContainer = $('#translationBreakdown');
+  const chipsContainer = $('#verifiedTermsChips');
+  const breakdownSummary = $('#breakdownSummary');
+  const unmatchedNotice = $('#unmatchedNotice');
+  const verifiedBadge = $('#verifiedBadge');
+  if (!breakdownContainer || !chipsContainer) return;
+
+  if (!rawSource || !translatedText) {
+    breakdownContainer.style.display = 'none';
+    if (verifiedBadge) verifiedBadge.style.display = 'none';
+    return;
+  }
+
+  breakdownContainer.style.display = 'block';
+  const from = sourceLanguage();
+  const to = targetLanguage();
+
+  if (matches.length > 0) {
+    if (breakdownSummary) breakdownSummary.textContent = `${matches.length} ${matches.length === 1 ? 'term i verifikuar' : 'terma të verifikuar'}`;
+    chipsContainer.innerHTML = matches.map(entry => {
+      const srcVal = entry.t?.[from] || entry.source || entry.t?.sq || '';
+      const tgtVal = entry.t?.[to] || entry.target || '';
+      const cat = entry.c || 'Term teknik';
+      return `
+        <div class="verified-chip" title="Kategoria: ${escapeHTML(cat)}">
+          <span class="chip-category">${escapeHTML(cat)}</span>
+          <strong class="chip-source">${escapeHTML(srcVal)}</strong>
+          <span class="chip-arrow">→</span>
+          <span class="chip-target">${escapeHTML(tgtVal)}</span>
+          <span class="chip-check">✓</span>
+        </div>
+      `;
+    }).join('');
+    if (verifiedBadge) verifiedBadge.style.display = 'inline-block';
+  } else {
+    if (breakdownSummary) breakdownSummary.textContent = '0 përputhje në fjalor';
+    chipsContainer.innerHTML = '<p class="empty-breakdown">Nuk u gjetën terma teknikë të regjistruar në këtë tekst.</p>';
+    if (verifiedBadge) verifiedBadge.style.display = 'none';
+  }
+
+  // Shfaq vërejtjen për terma të panjohur nëse teksti ka fjalë që nuk u përputhën
+  if (unmatchedNotice) {
+    unmatchedNotice.style.display = 'flex';
+  }
+}
+
 function setResult(content, matches = [], exact = false) {
   const result = $('#resultText');
   const info = $('#matchInfo');
+  if (!result) return;
   result.classList.remove('empty', 'notice');
   if (!content) {
     result.textContent = 'Përkthimi do të shfaqet këtu.';
     result.classList.add('empty');
-    info.textContent = 'Fjalori teknik është gati';
+    if (info) info.textContent = 'Fjalori teknik është gati';
+    renderTranslationBreakdown([], '', '');
     return;
   }
   if (!matches.length) {
     result.textContent = 'Nuk u gjet një përkthim i besueshëm në fjalorin teknik. Provoni një term më të shkurtër ose shtojeni në “Fjalori im”.';
     result.classList.add('notice');
-    info.textContent = 'Nuk u gjet term i njohur';
+    if (info) info.textContent = 'Nuk u gjet term i njohur';
+    renderTranslationBreakdown([], $('#sourceText')?.value || '', content);
     return;
   }
   result.textContent = content;
-  const names = matches.slice(0, 3).map(entry => entry.t[sourceLanguage()]).join(', ');
-  info.textContent = exact ? `Përkthim i drejtpërdrejtë: ${names}` : `${matches.length} ${matches.length === 1 ? 'term teknik u përshtat' : 'terma teknikë u përshtatën'}`;
+  const names = matches.slice(0, 3).map(entry => entry.t?.[sourceLanguage()] || entry.t?.sq).filter(Boolean).join(', ');
+  if (info) {
+    info.textContent = exact ? `Përkthim i drejtpërdrejtë: ${names}` : `${matches.length} ${matches.length === 1 ? 'term teknik u përshtat' : 'terma teknikë u përshtatën'}`;
+  }
+  renderTranslationBreakdown(matches, $('#sourceText')?.value || '', content);
 }
 
 function translate() {
-  const rawText = $('#sourceText').value.trim();
+  const sourceElem = $('#sourceText');
+  const rawText = sourceElem ? sourceElem.value.trim() : '';
+  const statusMsg = $('#statusMessage');
   if (!rawText) {
     setResult('');
-    $('#statusMessage').textContent = 'Shkruani një term ose frazë për ta përkthyer.';
+    if (statusMsg) statusMsg.textContent = 'Shkruani një term ose frazë për ta përkthyer.';
     return;
   }
   if (sourceLanguage() === targetLanguage()) {
-    setResult(rawText, [{ t: { [sourceLanguage()]: rawText } }], true);
-    $('#statusMessage').textContent = 'Keni zgjedhur të njëjtën gjuhë në të dy anët.';
+    setResult(rawText, [{ t: { [sourceLanguage()]: rawText }, c: 'Tekst i pandryshuar' }], true);
+    if (statusMsg) statusMsg.textContent = 'Keni zgjedhur të njëjtën gjuhë në të dy anët.';
     return;
   }
   const translation = createTextTranslation(rawText, sourceLanguage(), targetLanguage());
+  lastTranslationResult = translation;
   setResult(translation.text, translation.matches, translation.exact);
-  $('#statusMessage').textContent = translation.matches.length
-    ? 'Përkthimi është kryer duke përdorur terminologjinë e bletarisë.'
-    : 'Nuk ka pasur përputhje të sigurt në fjalorin teknik.';
+  if (statusMsg) {
+    statusMsg.textContent = translation.matches.length
+      ? 'Përkthimi është kryer duke përdorur terminologjinë e verifikuar të bletarisë.'
+      : 'Nuk ka pasur përputhje të sigurt në fjalorin teknik.';
+  }
 }
 
 function showToast(message) {
   const toast = $('#toast');
+  if (!toast) return;
   toast.textContent = message;
   toast.classList.add('visible');
-  window.clearTimeout(showToast.timer);
-  showToast.timer = window.setTimeout(() => toast.classList.remove('visible'), 2600);
+  if (typeof window !== 'undefined') {
+    window.clearTimeout(showToast.timer);
+    showToast.timer = window.setTimeout(() => toast.classList.remove('visible'), 2800);
+  }
 }
 
 function renderQuickTerms() {
+  const quickTermsElem = $('#quickTerms');
+  if (!quickTermsElem || typeof GLOSSARY === 'undefined' || typeof QUICK_TERM_IDS === 'undefined') return;
   const from = sourceLanguage();
   const quickTerms = QUICK_TERM_IDS
     .map(id => GLOSSARY.find(entry => entry.id === id))
     .filter(Boolean);
-  $('#quickTerms').innerHTML = quickTerms.map(entry =>
+  quickTermsElem.innerHTML = quickTerms.map(entry =>
     `<button class="term-chip" data-term="${entry.id}"><span>${entry.t[from] || entry.t.sq}</span><small>${entry.c}</small></button>`
   ).join('');
   $$('#quickTerms .term-chip').forEach(button => {
     button.addEventListener('click', () => {
       const entry = GLOSSARY.find(item => item.id === button.dataset.term);
       if (!entry) return;
-      $('#sourceText').value = entry.t[sourceLanguage()] || entry.t.sq;
-      updateSourceCount();
-      translate();
+      const sourceElem = $('#sourceText');
+      if (sourceElem) {
+        sourceElem.value = entry.t[sourceLanguage()] || entry.t.sq;
+        updateSourceCount();
+        translate();
+      }
     });
   });
 }
@@ -295,18 +387,25 @@ function glossaryMatches(entry, query, category) {
 }
 
 function renderGlossary() {
-  const query = $('#glossarySearch').value;
-  const category = $('#categoryFilter').value;
+  const searchInput = $('#glossarySearch');
+  const catFilter = $('#categoryFilter');
+  const listElem = $('#glossaryList');
+  const countElem = $('#glossaryCount');
+  if (!listElem || typeof GLOSSARY === 'undefined') return;
+  const query = searchInput ? searchInput.value : '';
+  const category = catFilter ? catFilter.value : 'Të gjitha';
   const from = sourceLanguage();
   const to = targetLanguage();
   const matches = GLOSSARY.filter(entry => glossaryMatches(entry, query, category));
-  $('#glossaryCount').textContent = `${matches.length} nga ${GLOSSARY.length} terma · ${LANGUAGES.length} gjuhë`;
-  $('#glossaryList').innerHTML = matches.length ? matches.map(entry => `
+  if (countElem && typeof LANGUAGES !== 'undefined') {
+    countElem.textContent = `${matches.length} nga ${GLOSSARY.length} terma · ${LANGUAGES.length} gjuhë`;
+  }
+  listElem.innerHTML = matches.length ? matches.map(entry => `
     <article class="glossary-item" tabindex="0" data-glossary-id="${entry.id}">
       <div class="category-tag">${entry.c}</div>
       <div class="term-pair"><strong>${entry.t[from] || entry.t.sq}</strong><span>→</span><strong>${entry.t[to] || entry.t.sq}</strong></div>
       <p>${entry.d}</p>
-      <div class="language-values">${LANGUAGES.map(language => `<span><b>${language.label}</b>${entry.t[language.id] || '—'}</span>`).join('')}</div>
+      <div class="language-values">${typeof LANGUAGES !== 'undefined' ? LANGUAGES.map(language => `<span><b>${language.label}</b>${entry.t[language.id] || '—'}</span>`).join('') : ''}</div>
     </article>
   `).join('') : '<p class="empty-state">Nuk u gjet asnjë term që përputhet me kërkimin tuaj.</p>';
   $$('#glossaryList .glossary-item').forEach(item => {
@@ -314,34 +413,49 @@ function renderGlossary() {
       const entry = GLOSSARY.find(candidate => candidate.id === item.dataset.glossaryId);
       if (!entry) return;
       showView('translate');
-      $('#sourceText').value = entry.t[sourceLanguage()] || entry.t.sq;
-      updateSourceCount();
-      translate();
+      const sourceElem = $('#sourceText');
+      if (sourceElem) {
+        sourceElem.value = entry.t[sourceLanguage()] || entry.t.sq;
+        updateSourceCount();
+        translate();
+      }
     });
   });
 }
 
 function renderCustomTerms() {
+  const countElem = $('#customCount');
+  const listElem = $('#customList');
+  if (!listElem) return;
   const from = sourceLanguage();
   const to = targetLanguage();
-  $('#customCount').textContent = `${customTerms.length} ${customTerms.length === 1 ? 'term personal' : 'terma personalë'}`;
-  $('#customList').innerHTML = customTerms.length ? customTerms.map(entry => `
+  if (countElem) {
+    countElem.textContent = `${customTerms.length} ${customTerms.length === 1 ? 'term personal' : 'terma personalë'}`;
+  }
+  listElem.innerHTML = customTerms.length ? customTerms.map(entry => `
     <article class="custom-item">
-      <div><div class="term-pair"><strong>${entry.t[from] || entry.t[entry.sourceLanguage]}</strong><span>→</span><strong>${entry.t[to] || entry.t[entry.targetLanguage]}</strong></div>
-      <p>${entry.d || 'Pa shënim shtesë.'}</p></div>
+      <div>
+        <div class="term-pair"><strong>${escapeHTML(entry.t[from] || entry.t[entry.sourceLanguage])}</strong><span>→</span><strong>${escapeHTML(entry.t[to] || entry.t[entry.targetLanguage])}</strong></div>
+        <p>${escapeHTML(entry.d || 'Pa shënim shtesë.')}</p>
+      </div>
       <button class="delete-button" data-custom-id="${entry.id}" title="Fshi termin" aria-label="Fshi termin">×</button>
     </article>
   `).join('') : '<p class="empty-state">Nuk keni shtuar ende terma personalë.</p>';
-  $$('.delete-button').forEach(button => button.addEventListener('click', () => {
+  $$('.delete-button[data-custom-id]').forEach(button => button.addEventListener('click', () => {
     customTerms = customTerms.filter(entry => entry.id !== button.dataset.customId);
     saveCustomTerms();
     renderCustomTerms();
+    renderBackupStats();
     showToast('Termi personal u fshi.');
   }));
 }
 
 function updateSourceCount() {
-  $('#sourceCount').textContent = formatCount($('#sourceText').value.length);
+  const sourceElem = $('#sourceText');
+  const countElem = $('#sourceCount');
+  if (sourceElem && countElem) {
+    countElem.textContent = formatCount(sourceElem.value.length);
+  }
 }
 
 function showView(viewName) {
@@ -352,10 +466,111 @@ function showView(viewName) {
   if (viewName === 'custom') renderCustomTerms();
   if (viewName === 'hives') renderHives();
   if (viewName === 'community') renderCommunity();
+  if (viewName === 'backup') renderBackupStats();
+}
+
+/* =========================================================================
+   OCR REVIEW & PREPROCESSING MODAL
+   ========================================================================= */
+
+function openOcrModal(text, fileName = 'Dokument', type = 'image') {
+  lastOcrResult = { text, fileName, type };
+  const modal = $('#ocrModal');
+  const editor = $('#ocrReviewText');
+  const fileNameTag = $('#ocrFileName');
+  const charTag = $('#ocrCharCount');
+  const confTag = $('#ocrConfidenceTag');
+  const reviewBtn = $('#reviewOcrButton');
+
+  if (!modal || !editor) return;
+  editor.value = text;
+  if (fileNameTag) fileNameTag.textContent = `Skedari: ${fileName}`;
+  if (charTag) charTag.textContent = `${text.length} karaktere`;
+
+  // Vlerësimi i lexueshmërisë
+  if (confTag) {
+    const lines = text.split('\n').filter(l => l.trim().length > 0);
+    const words = text.split(/\s+/).filter(Boolean);
+    if (words.length > 5 && lines.length > 0) {
+      confTag.textContent = type === 'pdf-ocr' ? 'OCR nga PDF (Skanim)' : 'OCR nga Imazhi';
+      confTag.className = 'ocr-meta-tag tag-success';
+    } else {
+      confTag.textContent = 'Kërkon rishikim manual';
+      confTag.className = 'ocr-meta-tag tag-warning';
+    }
+  }
+
+  modal.classList.add('visible');
+  modal.setAttribute('aria-hidden', 'false');
+  if (reviewBtn) reviewBtn.style.display = 'inline-block';
+}
+
+function closeOcrModal() {
+  const modal = $('#ocrModal');
+  if (modal) {
+    modal.classList.remove('visible');
+    modal.setAttribute('aria-hidden', 'true');
+  }
+}
+
+function applyOcrText() {
+  const editor = $('#ocrReviewText');
+  const sourceElem = $('#sourceText');
+  if (editor && sourceElem) {
+    sourceElem.value = editor.value;
+    updateSourceCount();
+    translate();
+    closeOcrModal();
+    showToast('Teksti OCR u vendos në përkthyes.');
+  }
+}
+
+function cleanOcrLineBreaks() {
+  const editor = $('#ocrReviewText');
+  if (!editor) return;
+  const original = editor.value;
+  // Bashkon rreshtat që nuk mbarojnë me shenjë pikësimi
+  const cleaned = original
+    .replace(/([^\.\?!:\n])\n([a-zçë0-9\(\[\{"'a-zA-Z])/gu, '$1 $2')
+    .replace(/[ \t]+/g, ' ')
+    .trim();
+  editor.value = cleaned;
+  showToast('Rreshtat e ndarë u bashkuan.');
+}
+
+function normalizeOcrSpaces() {
+  const editor = $('#ocrReviewText');
+  if (!editor) return;
+  const original = editor.value;
+  const cleaned = original
+    .replace(/[ \t]+/g, ' ')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+  editor.value = cleaned;
+  showToast('Hapësirat u normalizuan.');
+}
+
+async function copyOcrText() {
+  const editor = $('#ocrReviewText');
+  if (!editor || !editor.value) return;
+  try {
+    if (window.desktopAPI?.writeClipboard) {
+      await window.desktopAPI.writeClipboard(editor.value);
+    } else if (navigator.clipboard) {
+      await navigator.clipboard.writeText(editor.value);
+    }
+    showToast('Teksti OCR u kopjua.');
+  } catch {
+    showToast('Kopjimi nuk u krye.');
+  }
 }
 
 async function importDocument() {
   try {
+    if (!window.desktopAPI?.importDocument) {
+      showToast('Importi i dokumenteve mbështetet në versionin desktop.');
+      return;
+    }
     const result = await window.desktopAPI.importDocument(sourceLanguage());
     if (result.canceled) return;
     if (result.error) {
@@ -370,8 +585,14 @@ async function importDocument() {
       : result.type === 'pdf-ocr'
         ? 'OCR nga PDF-ja'
         : 'Teksti nga dokumenti';
-    $('#statusMessage').textContent = `${sourceType} u ngarkua nga ${result.fileName}.`;
-    showToast('Skedari u lexua dhe u vendos për përkthim.');
+    const statusMsg = $('#statusMessage');
+    if (statusMsg) statusMsg.textContent = `${sourceType} u ngarkua nga ${result.fileName}.`;
+    
+    // Hap modalin e rishikimit për imazhe dhe PDF të skanuara
+    if (result.type === 'image' || result.type === 'pdf-ocr') {
+      openOcrModal(result.text, result.fileName, result.type);
+    }
+    showToast('Skedari u lexua me sukses.');
   } catch {
     showToast('Nuk u arrit hapja e skedarit. Provoni përsëri.');
   }
@@ -379,10 +600,18 @@ async function importDocument() {
 
 async function pasteText() {
   try {
-    const text = await window.desktopAPI.readClipboard();
-    $('#sourceText').value = text;
-    updateSourceCount();
-    if (text.trim()) translate();
+    let text = '';
+    if (window.desktopAPI?.readClipboard) {
+      text = await window.desktopAPI.readClipboard();
+    } else if (navigator.clipboard) {
+      text = await navigator.clipboard.readText();
+    }
+    const sourceElem = $('#sourceText');
+    if (sourceElem) {
+      sourceElem.value = text;
+      updateSourceCount();
+      if (text.trim()) translate();
+    }
   } catch {
     showToast('Nuk u arrit qasja te clipboard-i.');
   }
@@ -390,12 +619,16 @@ async function pasteText() {
 
 async function copyResult() {
   const result = $('#resultText');
-  if (!result.textContent || result.classList.contains('empty') || result.classList.contains('notice')) {
+  if (!result || !result.textContent || result.classList.contains('empty') || result.classList.contains('notice')) {
     showToast('Nuk ka përkthim për t’u kopjuar.');
     return;
   }
   try {
-    await window.desktopAPI.writeClipboard(result.textContent);
+    if (window.desktopAPI?.writeClipboard) {
+      await window.desktopAPI.writeClipboard(result.textContent);
+    } else if (navigator.clipboard) {
+      await navigator.clipboard.writeText(result.textContent);
+    }
     showToast('Përkthimi u kopjua në clipboard.');
   } catch {
     showToast('Nuk u arrit kopjimi i përkthimit.');
@@ -432,7 +665,22 @@ function addCustomTerm(event) {
   $('#customSourceLanguage').value = from;
   $('#customTargetLanguage').value = to;
   renderCustomTerms();
+  renderBackupStats();
   showToast('Termi u ruajt në fjalorin tuaj.');
+}
+
+function quickAddCustomFromUnmatched() {
+  const rawSource = $('#sourceText')?.value.trim() || '';
+  showView('custom');
+  const sourceInput = $('#customSource');
+  const sourceLangSelect = $('#customSourceLanguage');
+  const targetLangSelect = $('#customTargetLanguage');
+  if (sourceInput) {
+    sourceInput.value = rawSource.slice(0, 100);
+    sourceInput.focus();
+  }
+  if (sourceLangSelect) sourceLangSelect.value = sourceLanguage();
+  if (targetLangSelect) targetLangSelect.value = targetLanguage();
 }
 
 async function exportCustomTerms() {
@@ -468,11 +716,16 @@ async function importCustomTerms() {
     });
     saveCustomTerms();
     renderCustomTerms();
+    renderBackupStats();
     showToast(imported ? `${imported} terma u importuan.` : 'Nuk u gjetën terma të rinj për import.');
   } catch {
     showToast('Skedari nuk është fjalor personal i vlefshëm.');
   }
 }
+
+/* =========================================================================
+   MY HIVES (KOSHERET)
+   ========================================================================= */
 
 function hiveStatusLabel(status) {
   return {
@@ -490,8 +743,13 @@ function formatInspectionDate(value) {
 }
 
 function renderHives() {
-  $('#hiveCount').textContent = `${hives.length} ${hives.length === 1 ? 'koshere e ruajtur' : 'koshere të ruajtura'}`;
-  $('#hiveList').innerHTML = hives.length ? hives.map(hive => `
+  const countElem = $('#hiveCount');
+  const listElem = $('#hiveList');
+  if (!listElem) return;
+  if (countElem) {
+    countElem.textContent = `${hives.length} ${hives.length === 1 ? 'koshere e ruajtur' : 'koshere të ruajtura'}`;
+  }
+  listElem.innerHTML = hives.length ? hives.map(hive => `
     <article class="hive-card" data-hive-id="${hive.id}">
       <div class="hive-card-head"><span class="hive-status status-${hive.status}">${hiveStatusLabel(hive.status)}</span><button class="delete-button" data-delete-hive="${hive.id}" title="Fshi kosheren" aria-label="Fshi kosheren">×</button></div>
       <h3>${escapeHTML(hive.name)}</h3>
@@ -506,6 +764,7 @@ function renderHives() {
     hives = hives.filter(hive => hive.id !== button.dataset.deleteHive);
     saveStoredItems(HIVE_STORAGE_KEY, hives);
     renderHives();
+    renderBackupStats();
     showToast('Kosherja u fshi nga regjistri lokal.');
   }));
   $$('[data-inspect-hive]').forEach(button => button.addEventListener('click', () => {
@@ -533,8 +792,13 @@ function addHive(event) {
   saveStoredItems(HIVE_STORAGE_KEY, hives);
   event.target.reset();
   renderHives();
+  renderBackupStats();
   showToast('Kosherja u ruajt në bletoren lokale.');
 }
+
+/* =========================================================================
+   COMMUNITY HIVES (DISKUTIMET LOKALE)
+   ========================================================================= */
 
 function communityMatches(post, query, topic) {
   if (topic !== 'Të gjitha' && post.topic !== topic) return false;
@@ -548,11 +812,18 @@ function formatPostDate(value) {
 }
 
 function renderCommunity() {
-  const query = $('#communitySearch').value;
-  const topic = $('#communityFilter').value;
+  const searchInput = $('#communitySearch');
+  const filterSelect = $('#communityFilter');
+  const countElem = $('#communityCount');
+  const listElem = $('#communityList');
+  if (!listElem) return;
+  const query = searchInput ? searchInput.value : '';
+  const topic = filterSelect ? filterSelect.value : 'Të gjitha';
   const posts = communityPosts.filter(post => communityMatches(post, query, topic));
-  $('#communityCount').textContent = `${posts.length} ${posts.length === 1 ? 'diskutim lokal' : 'diskutime lokale'}`;
-  $('#communityList').innerHTML = posts.length ? posts.map(post => `
+  if (countElem) {
+    countElem.textContent = `${posts.length} ${posts.length === 1 ? 'diskutim lokal' : 'diskutime lokale'}`;
+  }
+  listElem.innerHTML = posts.length ? posts.map(post => `
     <article class="community-post" data-post-id="${post.id}">
       <div class="post-meta"><span class="community-topic">${escapeHTML(post.topic)}</span><span>${formatPostDate(post.createdAt)}</span></div>
       <h3>${escapeHTML(post.title)}</h3>
@@ -571,6 +842,7 @@ function renderCommunity() {
     communityPosts = communityPosts.filter(post => post.id !== button.dataset.deletePost);
     saveStoredItems(COMMUNITY_STORAGE_KEY, communityPosts);
     renderCommunity();
+    renderBackupStats();
     showToast('Diskutimi u fshi nga pajisja.');
   }));
 }
@@ -593,6 +865,7 @@ function addCommunityPost(event) {
   saveStoredItems(COMMUNITY_STORAGE_KEY, communityPosts);
   event.target.reset();
   renderCommunity();
+  renderBackupStats();
   showToast('Diskutimi u publikua lokalisht.');
 }
 
@@ -622,56 +895,251 @@ async function importCommunityPosts() {
     communityPosts = [...safeIncoming, ...communityPosts];
     saveStoredItems(COMMUNITY_STORAGE_KEY, communityPosts);
     renderCommunity();
+    renderBackupStats();
     showToast(safeIncoming.length ? `${safeIncoming.length} diskutime u importuan.` : 'Nuk u gjetën diskutime të reja për import.');
   } catch {
     showToast('Skedari nuk përmban diskutime të vlefshme.');
   }
 }
 
+/* =========================================================================
+   BACKUP & RESTORE CENTER
+   ========================================================================= */
+
+function renderBackupStats() {
+  const customCountElem = $('#backupCustomCount');
+  const hiveCountElem = $('#backupHiveCount');
+  const commCountElem = $('#backupCommunityCount');
+  if (customCountElem) customCountElem.textContent = customTerms.length;
+  if (hiveCountElem) hiveCountElem.textContent = hives.length;
+  if (commCountElem) commCountElem.textContent = communityPosts.length;
+}
+
+async function createFullBackup() {
+  try {
+    const payload = {
+      app: 'BletëFjalë',
+      schemaVersion: BACKUP_SCHEMA_VERSION,
+      exportedAt: new Date().toISOString(),
+      customTerms,
+      hives,
+      communityPosts
+    };
+    const content = JSON.stringify(payload, null, 2);
+    const dateStr = new Date().toISOString().slice(0, 10);
+    const defaultPath = `bletefjale-backup-${dateStr}.json`;
+    
+    if (window.desktopAPI?.saveJson) {
+      const result = await window.desktopAPI.saveJson(content, {
+        title: 'Ruaj kopjen e plotë rezervë BletëFjalë',
+        defaultPath
+      });
+      if (result.saved) showToast('Kopja e plotë rezervë u ruajt me sukses.');
+    } else {
+      // Fallback për browser / testim
+      const blob = new Blob([content], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = defaultPath;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Kopja rezervë u shkarkua.');
+    }
+  } catch {
+    showToast('Eksportimi i kopjes rezervë nuk u krye.');
+  }
+}
+
+async function restoreFullBackup() {
+  try {
+    if (!window.desktopAPI?.openJson) {
+      showToast('Rikthimi i kopjeve rezervë mbështetet në aplikacion.');
+      return;
+    }
+    const result = await window.desktopAPI.openJson({
+      title: 'Zgjidh skedarin rezervë BletëFjalë (JSON)'
+    });
+    if (result.canceled) return;
+
+    const parsed = JSON.parse(result.content);
+    if (!parsed || (parsed.app && parsed.app !== 'BletëFjalë' && !parsed.customTerms && !parsed.terms && !parsed.hives && !parsed.posts)) {
+      throw new Error('Skedari nuk është kopje rezervë e vlefshme e BletëFjalë.');
+    }
+
+    const restoreModeElem = document.querySelector('input[name="restoreMode"]:checked');
+    const mode = restoreModeElem ? restoreModeElem.value : 'merge';
+
+    const incomingTerms = (Array.isArray(parsed.customTerms) ? parsed.customTerms : (Array.isArray(parsed.terms) ? parsed.terms : [])).filter(validCustomTerm);
+    const incomingHives = (Array.isArray(parsed.hives) ? parsed.hives : []).filter(validHive);
+    const incomingPosts = (Array.isArray(parsed.communityPosts) ? parsed.communityPosts : (Array.isArray(parsed.posts) ? parsed.posts : [])).filter(validCommunityPost);
+
+    if (mode === 'replace') {
+      customTerms = incomingTerms;
+      hives = incomingHives;
+      communityPosts = incomingPosts;
+    } else {
+      // Merge
+      const termIds = new Set(customTerms.map(t => t.id));
+      incomingTerms.forEach(t => { if (!termIds.has(t.id)) customTerms.push(t); });
+
+      const hiveIds = new Set(hives.map(h => h.id));
+      incomingHives.forEach(h => { if (!hiveIds.has(h.id)) hives.push(h); });
+
+      const postIds = new Set(communityPosts.map(p => p.id));
+      incomingPosts.forEach(p => { if (!postIds.has(p.id)) communityPosts.unshift(p); });
+    }
+
+    saveCustomTerms();
+    saveStoredItems(HIVE_STORAGE_KEY, hives);
+    saveStoredItems(COMMUNITY_STORAGE_KEY, communityPosts);
+
+    renderCustomTerms();
+    renderHives();
+    renderCommunity();
+    renderBackupStats();
+
+    showToast(`Rikthimi përfundoi: ${incomingTerms.length} terma, ${incomingHives.length} koshere, ${incomingPosts.length} diskutime.`);
+  } catch (err) {
+    showToast(`Rikthimi dështoi: ${err.message || 'Skedar i pavlefshëm'}`);
+  }
+}
+
+/* =========================================================================
+   EVENTS & INITIALIZATION
+   ========================================================================= */
+
 function setupEvents() {
   $$('.nav-link').forEach(button => button.addEventListener('click', () => showView(button.dataset.view)));
   $$('[data-go="glossary"]').forEach(button => button.addEventListener('click', () => showView('glossary')));
-  $('#sourceText').addEventListener('input', updateSourceCount);
-  $('#sourceText').addEventListener('keydown', event => {
-    if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') translate();
+  
+  const sourceText = $('#sourceText');
+  if (sourceText) {
+    sourceText.addEventListener('input', updateSourceCount);
+    sourceText.addEventListener('keydown', event => {
+      if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') translate();
+    });
+  }
+
+  const translateBtn = $('#translateButton');
+  if (translateBtn) translateBtn.addEventListener('click', translate);
+
+  const importDocBtn = $('#importDocumentButton');
+  if (importDocBtn) importDocBtn.addEventListener('click', importDocument);
+
+  const reviewOcrBtn = $('#reviewOcrButton');
+  if (reviewOcrBtn) reviewOcrBtn.addEventListener('click', () => {
+    if (lastOcrResult) openOcrModal(lastOcrResult.text, lastOcrResult.fileName, lastOcrResult.type);
   });
-  $('#translateButton').addEventListener('click', translate);
-  $('#importDocumentButton').addEventListener('click', importDocument);
-  $('#pasteButton').addEventListener('click', pasteText);
-  $('#copyButton').addEventListener('click', copyResult);
-  $('#clearButton').addEventListener('click', () => {
-    $('#sourceText').value = '';
+
+  const pasteBtn = $('#pasteButton');
+  if (pasteBtn) pasteBtn.addEventListener('click', pasteText);
+
+  const copyBtn = $('#copyButton');
+  if (copyBtn) copyBtn.addEventListener('click', copyResult);
+
+  const clearBtn = $('#clearButton');
+  if (clearBtn) clearBtn.addEventListener('click', () => {
+    if ($('#sourceText')) $('#sourceText').value = '';
     updateSourceCount();
     setResult('');
-    $('#statusMessage').textContent = 'Fusha u pastrua.';
+    const statusMsg = $('#statusMessage');
+    if (statusMsg) statusMsg.textContent = 'Fusha u pastrua.';
+    const reviewBtn = $('#reviewOcrButton');
+    if (reviewBtn) reviewBtn.style.display = 'none';
   });
-  $('#swapLanguages').addEventListener('click', () => {
+
+  const swapLangBtn = $('#swapLanguages');
+  if (swapLangBtn) swapLangBtn.addEventListener('click', () => {
     const oldSource = sourceLanguage();
-    $('#sourceLanguage').value = targetLanguage();
-    $('#targetLanguage').value = oldSource;
+    const srcSelect = $('#sourceLanguage');
+    const tgtSelect = $('#targetLanguage');
+    if (srcSelect && tgtSelect) {
+      srcSelect.value = targetLanguage();
+      tgtSelect.value = oldSource;
+    }
     renderQuickTerms();
     if (activeView === 'glossary') renderGlossary();
-    if ($('#sourceText').value.trim()) translate();
+    if ($('#sourceText')?.value.trim()) translate();
   });
-  $('#sourceLanguage').addEventListener('change', () => {
+
+  const srcLangSelect = $('#sourceLanguage');
+  if (srcLangSelect) srcLangSelect.addEventListener('change', () => {
     renderQuickTerms();
     if (activeView === 'glossary') renderGlossary();
   });
-  $('#targetLanguage').addEventListener('change', () => {
+
+  const tgtLangSelect = $('#targetLanguage');
+  if (tgtLangSelect) tgtLangSelect.addEventListener('change', () => {
     if (activeView === 'glossary') renderGlossary();
-    if ($('#sourceText').value.trim()) translate();
+    if ($('#sourceText')?.value.trim()) translate();
   });
-  $('#glossarySearch').addEventListener('input', renderGlossary);
-  $('#categoryFilter').addEventListener('change', renderGlossary);
-  $('#customForm').addEventListener('submit', addCustomTerm);
-  $('#exportButton').addEventListener('click', exportCustomTerms);
-  $('#importButton').addEventListener('click', importCustomTerms);
-  $('#hiveForm').addEventListener('submit', addHive);
-  $('#communityForm').addEventListener('submit', addCommunityPost);
-  $('#communitySearch').addEventListener('input', renderCommunity);
-  $('#communityFilter').addEventListener('change', renderCommunity);
-  $('#exportCommunityButton').addEventListener('click', exportCommunityPosts);
-  $('#importCommunityButton').addEventListener('click', importCommunityPosts);
+
+  const quickAddBtn = $('#quickAddCustomBtn');
+  if (quickAddBtn) quickAddBtn.addEventListener('click', quickAddCustomFromUnmatched);
+
+  // OCR Modal Buttons
+  const closeOcrBtn = $('#closeOcrModalBtn');
+  if (closeOcrBtn) closeOcrBtn.addEventListener('click', closeOcrModal);
+
+  const cancelOcrBtn = $('#cancelOcrBtn');
+  if (cancelOcrBtn) cancelOcrBtn.addEventListener('click', closeOcrModal);
+
+  const applyOcrBtn = $('#applyOcrBtn');
+  if (applyOcrBtn) applyOcrBtn.addEventListener('click', applyOcrText);
+
+  const cleanLinesBtn = $('#ocrCleanLineBreaksBtn');
+  if (cleanLinesBtn) cleanLinesBtn.addEventListener('click', cleanOcrLineBreaks);
+
+  const normSpacesBtn = $('#ocrNormalizeSpacesBtn');
+  if (normSpacesBtn) normSpacesBtn.addEventListener('click', normalizeOcrSpaces);
+
+  const copyOcrBtn = $('#ocrCopyTextBtn');
+  if (copyOcrBtn) copyOcrBtn.addEventListener('click', copyOcrText);
+
+  // Glossary
+  const glossSearch = $('#glossarySearch');
+  if (glossSearch) glossSearch.addEventListener('input', renderGlossary);
+
+  const catFilter = $('#categoryFilter');
+  if (catFilter) catFilter.addEventListener('change', renderGlossary);
+
+  // Custom Terms
+  const customForm = $('#customForm');
+  if (customForm) customForm.addEventListener('submit', addCustomTerm);
+
+  const exportCustomBtn = $('#exportButton');
+  if (exportCustomBtn) exportCustomBtn.addEventListener('click', exportCustomTerms);
+
+  const importCustomBtn = $('#importButton');
+  if (importCustomBtn) importCustomBtn.addEventListener('click', importCustomTerms);
+
+  // Hives
+  const hiveForm = $('#hiveForm');
+  if (hiveForm) hiveForm.addEventListener('submit', addHive);
+
+  // Community
+  const commForm = $('#communityForm');
+  if (commForm) commForm.addEventListener('submit', addCommunityPost);
+
+  const commSearch = $('#communitySearch');
+  if (commSearch) commSearch.addEventListener('input', renderCommunity);
+
+  const commFilter = $('#communityFilter');
+  if (commFilter) commFilter.addEventListener('change', renderCommunity);
+
+  const exportCommBtn = $('#exportCommunityButton');
+  if (exportCommBtn) exportCommBtn.addEventListener('click', exportCommunityPosts);
+
+  const importCommBtn = $('#importCommunityButton');
+  if (importCommBtn) importCommBtn.addEventListener('click', importCommunityPosts);
+
+  // Backup & Restore
+  const createBkpBtn = $('#createBackupBtn');
+  if (createBkpBtn) createBkpBtn.addEventListener('click', createFullBackup);
+
+  const restoreBkpBtn = $('#restoreBackupBtn');
+  if (restoreBkpBtn) restoreBkpBtn.addEventListener('click', restoreFullBackup);
 }
 
 function init() {
@@ -684,6 +1152,9 @@ function init() {
   renderCustomTerms();
   renderHives();
   renderCommunity();
+  renderBackupStats();
 }
 
-document.addEventListener('DOMContentLoaded', init);
+if (typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', init);
+}

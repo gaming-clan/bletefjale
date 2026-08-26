@@ -12,35 +12,51 @@ const styles = read('src', 'styles.css');
 
 for (const id of [
   'importDocumentButton',
+  'reviewOcrButton',
   'hivesView',
   'communityView',
+  'backupView',
   'hiveForm',
   'communityForm',
   'hiveList',
   'communityList',
+  'ocrModal',
+  'ocrReviewText',
+  'translationBreakdown',
+  'verifiedTermsChips',
+  'createBackupBtn',
+  'restoreBackupBtn'
 ]) {
   assert.match(index, new RegExp(`id="${id}"`), `${id} mungon nga ndërfaqja.`);
 }
 
-for (const view of ['hives', 'community']) {
+for (const view of ['hives', 'community', 'backup']) {
   assert.match(index, new RegExp(`data-view="${view}"`), `Navigimi për ${view} mungon.`);
-  assert.match(renderer, new RegExp(`showView\('${view}'\)|viewName === '${view}'`), `Pamja ${view} nuk është lidhur me navigimin.`);
+  assert.match(renderer, new RegExp(`showView\\('${view}'\\)|viewName === '${view}'`), `Pamja ${view} nuk është lidhur me navigimin.`);
 }
 
 for (const handler of [
   'importDocument',
+  'openOcrModal',
+  'closeOcrModal',
+  'applyOcrText',
+  'renderTranslationBreakdown',
   'addHive',
   'renderHives',
   'addCommunityPost',
   'renderCommunity',
   'exportCommunityPosts',
   'importCommunityPosts',
+  'createFullBackup',
+  'restoreFullBackup',
+  'renderBackupStats'
 ]) {
   assert.match(renderer, new RegExp(`function ${handler}|async function ${handler}`), `Funksioni ${handler} mungon.`);
 }
 
 assert.match(renderer, /HIVE_STORAGE_KEY/, 'Ruajtja lokale e koshereve mungon.');
 assert.match(renderer, /COMMUNITY_STORAGE_KEY/, 'Ruajtja lokale e komunitetit mungon.');
+assert.match(renderer, /BACKUP_SCHEMA_VERSION/, 'Versioni i skemës së backup-it mungon.');
 assert.match(renderer, /desktopAPI\.importDocument/, 'Butoni nuk përdor urën e importit të dokumenteve.');
 assert.match(preload, /importDocument:/, 'Ura e importit të dokumenteve mungon.');
 assert.match(main, /document:import/, 'Procesi desktop nuk përpunon dokumentet.');
@@ -48,11 +64,13 @@ assert.match(main, /recognizeScannedPdf/, 'OCR-ja për PDF-të e skanuara mungon
 assert.match(main, /pdfjs-dist\/legacy\/build\/pdf\.mjs/, 'PDF.js nuk përdoret për renderimin OCR.');
 assert.match(main, /@napi-rs\/canvas/, 'Canvas lokal për OCR të PDF-ve mungon.');
 assert.match(renderer, /pdf-ocr/, 'Ndërfaqja nuk njofton OCR-në e PDF-së.');
+
 for (const extension of ['pdf', 'docx', 'txt', 'md', 'csv', 'png', 'jpg', 'webp']) {
   assert.match(main, new RegExp(`'${extension}'`), `Mbështetja për ${extension} mungon.`);
 }
-for (const className of ['hive-grid', 'community-grid', 'panel-actions']) {
-  assert.match(styles, new RegExp(`\.${className}`), `Stili ${className} mungon.`);
+
+for (const className of ['hive-grid', 'community-grid', 'panel-actions', 'safety-banner', 'translation-breakdown', 'modal-overlay', 'backup-grid']) {
+  assert.match(styles, new RegExp(`\\.${className}`), `Stili ${className} mungon.`);
 }
 
-console.log('OK: importi i dokumenteve, My Hives dhe Community Hives janë të lidhura me ndërfaqen lokale.');
+console.log('OK: importi i dokumenteve, My Hives, Community Hives, OCR review, transparenca e termave dhe Backup/Restore janë plotësisht të integruara.');

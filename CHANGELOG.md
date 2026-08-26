@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.6.1 — 2026-08-26
+- Added an interactive **OCR Review & Correction** modal with confidence indicator, line-break cleanup tool, and direct transfer into the translation workspace.
+- Enhanced translation transparency by clearly separating **Verified Technical Terms** (with categories and badges) from unverified text, and adding a quick "+ Shto në Fjalorin tim" action for unmatched words.
+- Added a health and veterinary safety disclaimer across the UI and documentation: *"Përkthimi ndihmon kuptimin e termave; ndiqni gjithmonë etiketën origjinale dhe udhëzimin e specialistit të autorizuar."*
+- Implemented a unified **Backup & Restore Center** for one-click export and import of all local data (Custom Glossary, Hives, Community posts) with versioned data validation (`bletefjale-backup-v1`).
+- Updated and finalized product documentation (`README.md`, `PRIVACY.md`, `SECURITY.md`, `docs/`) with accurate statements regarding hybrid PDF OCR, 8-language coverage, and local-first architecture.
+- Added automated test suites for Backup & Restore and enhanced module workflows.
+
 ## 1.6.0 — 2026-08-17
 - Improved scanned-PDF OCR by rendering pages at higher resolution and applying a layout mode suited to multi-column product labels.
 - Added 19 common Turkish product-label phrases and offline Turkish–Albanian label instructions, including application, dosage, storage and nutritional guidance for the supplied product labels.
@@ -25,7 +33,7 @@
 - Adapted application surfaces, inputs, controls, cards, badges and focus states to each palette without changing offline translation, OCR, document import or personal glossary workflows.
 - Added automated checks confirming all theme choices, palettes and persistence wiring are present.
 
-## 1.2.0 â€” 2026-08-17
+## 1.2.0 — 2026-08-17
 - Expanded the offline beekeeping glossary to 149 technical terms in Albanian, English, Italian, German, French, Spanish, Turkish and Greek.
 - Added stable term identifiers and searchable aliases, including improved Turkish character normalisation.
 - Improved phrase replacement with word-boundary matching to avoid unintended partial-term translations.
@@ -33,13 +41,11 @@
 - Added automated integrity tests that confirm full language coverage, quick-term references and key Turkish/Greek translations.
 
 ## 1.1.0 — 2026-08-17
-
 - Added Turkish and Greek terminology support.
 - Added text extraction from supported images and documents.
 - Added a README file and integrated Quick Start Guide.
 - Added branded application icon.
 - Added production documentation, privacy draft, security policy, build checks, and repository hygiene.
 
-## 1.0.0
-
+## 1.0.0 — 2026-08-17
 - First desktop release with multilingual technical glossary for beekeeping.

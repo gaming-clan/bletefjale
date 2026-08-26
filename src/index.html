@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BletëFjalë — Përkthyes për Bletari</title>
+  <title>BletëFjalë — Përkthyes dhe Asistent për Bletari</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
@@ -21,7 +21,8 @@
         <button class="nav-link" data-view="glossary">Fjalori</button>
         <button class="nav-link" data-view="custom">Fjalori im</button>
         <button class="nav-link" data-view="hives">Kosheret</button>
-        <button class="nav-link" data-view="community">Komuniteti</button>
+        <button class="nav-link" data-view="community">Komuniteti lokal</button>
+        <button class="nav-link" data-view="backup">Kopje Rezervë</button>
       </nav>
       <label class="theme-picker" for="themeSelect">
         <span>Tema</span>
@@ -38,14 +39,20 @@
 
     <main>
       <section id="translateView" class="view active">
+        <div class="safety-banner" role="note">
+          <span class="safety-icon" aria-hidden="true">⚠️</span>
+          <span><strong>Kujtesë e rëndësishme:</strong> Përkthimi ndihmon kuptimin e termave teknikë; ndiqni gjithmonë etiketën origjinale të produktit dhe udhëzimin e specialistit të autorizuar.</span>
+        </div>
+
         <section class="hero">
-          <p class="eyebrow">PËR BLETARË, VETERINERË DHE STUDENTË</p>
+          <p class="eyebrow">PËR BLETARË, VETERINERË DHE SPECIALISTË</p>
           <h1>Fjalët e sakta për<br><em>çdo koshere.</em></h1>
-          <p class="hero-copy">Përkthim i specializuar i termave, praktikave dhe sëmundjeve të bletarisë. Fjalori teknik përparësohet gjithmonë.</p>
+          <p class="hero-copy">Përkthim i specializuar i termave, etiketave dhe sëmundjeve të bletarisë në 8 gjuhë. Fjalori teknik dhe frazat e verifikuara përparësohen gjithmonë.</p>
           <div class="hero-stats" aria-label="Mbulimi i fjalorit">
             <span id="supportedLanguages">8 gjuhë</span>
-            <span id="termTotal">100+ terma teknikë</span>
-            <span>Terminologji bletarie</span>
+            <span id="termTotal">168+ terma teknikë</span>
+            <span>OCR lokal për imazhe & PDF</span>
+            <span>100% Local-First</span>
           </div>
         </section>
 
@@ -63,17 +70,47 @@
           </div>
           <div class="translation-grid">
             <div class="text-panel source-panel">
-              <div class="panel-head"><strong>Teksti për përkthim</strong><div class="panel-actions"><button id="importDocumentButton" class="text-action" title="Ngarko imazh ose dokument">Ngarko</button><button id="pasteButton" class="text-action">Ngjit</button></div></div>
-              <textarea id="sourceText" spellcheck="true" placeholder="Shkruani një term ose frazë të bletarisë…"></textarea>
-              <div class="panel-foot"><span id="sourceCount">0 karaktere</span><button id="clearButton" class="text-action">Pastro</button></div>
+              <div class="panel-head">
+                <strong>Teksti për përkthim</strong>
+                <div class="panel-actions">
+                  <button id="importDocumentButton" class="text-action" title="Ngarko imazh ose dokument (PDF tekst/skan, DOCX, TXT, CSV)">Ngarko skedar</button>
+                  <button id="reviewOcrButton" class="text-action" title="Hap dritaren e rishikimit dhe korrigjimit OCR" style="display: none;">Shqyrto OCR</button>
+                  <button id="pasteButton" class="text-action">Ngjit</button>
+                </div>
+              </div>
+              <textarea id="sourceText" spellcheck="true" placeholder="Shkruani një term, udhëzim ose ngarkoni një etiketë/dokument të bletarisë…"></textarea>
+              <div class="panel-foot">
+                <span id="sourceCount">0 karaktere</span>
+                <button id="clearButton" class="text-action">Pastro</button>
+              </div>
             </div>
             <div class="translate-arrow" aria-hidden="true">→</div>
             <div class="text-panel result-panel">
-              <div class="panel-head"><strong>Përkthimi profesional</strong><button id="copyButton" class="text-action">Kopjo</button></div>
+              <div class="panel-head">
+                <strong>Përkthimi profesional</strong>
+                <button id="copyButton" class="text-action">Kopjo</button>
+              </div>
               <div id="resultText" class="result-text empty">Përkthimi do të shfaqet këtu.</div>
-              <div class="panel-foot"><span id="matchInfo">Fjalori teknik është gati</span><span class="verified">✓ I verifikuar</span></div>
+              <div class="panel-foot">
+                <span id="matchInfo">Fjalori teknik është gati</span>
+                <span id="verifiedBadge" class="verified">✓ I verifikuar</span>
+              </div>
             </div>
           </div>
+
+          <!-- Paneli i transparencës: Ndarja e termave të verifikuar nga teksti i panjohur -->
+          <div id="translationBreakdown" class="translation-breakdown" style="display: none;">
+            <div class="breakdown-header">
+              <h4>Termat e verifikuar në këtë tekst</h4>
+              <span id="breakdownSummary" class="breakdown-tag">0 terma</span>
+            </div>
+            <div id="verifiedTermsChips" class="verified-chips"></div>
+            <div id="unmatchedNotice" class="unmatched-notice" style="display: none;">
+              <span>Keni terma të paverifikuar në fjalorin bazë?</span>
+              <button id="quickAddCustomBtn" class="outline-button-small">+ Shto në Fjalorin tim</button>
+            </div>
+          </div>
+
           <div class="translate-bottom">
             <span id="statusMessage" role="status">Shkruani ose zgjidhni një term nga sugjerimet.</span>
             <button id="translateButton" class="primary-button">Përkthe tani <span>→</span></button>
@@ -81,15 +118,25 @@
         </section>
 
         <section class="suggestion-section">
-          <div class="section-title"><div><p class="eyebrow">PËRKTHIME TË SHPEJTA</p><h2>Termat më të përdorur</h2></div><button class="see-all" data-go="glossary">Shih fjalorin →</button></div>
+          <div class="section-title">
+            <div>
+              <p class="eyebrow">PËRKTHIME TË SHPEJTA</p>
+              <h2>Termat më të përdorur</h2>
+            </div>
+            <button class="see-all" data-go="glossary">Shih të gjithë fjalorin →</button>
+          </div>
           <div id="quickTerms" class="term-chips"></div>
         </section>
       </section>
 
       <section id="glossaryView" class="view">
-        <div class="view-header"><p class="eyebrow">REFERENCË TEKNIKE</p><h1>Fjalori i bletarisë</h1><p>Kërkoni sipas termit, përkufizimit, sinonimit ose kategorisë në të tetë gjuhët e mbështetura.</p></div>
+        <div class="view-header">
+          <p class="eyebrow">REFERENCË TEKNIKE</p>
+          <h1>Fjalori i bletarisë</h1>
+          <p>Kërkoni sipas termit, përkufizimit, sinonimit ose kategorisë në të 8 gjuhët e mbështetura.</p>
+        </div>
         <div class="glossary-toolbar">
-          <input id="glossarySearch" type="search" placeholder="Kërko p.sh. varroa, propolis, mbretëreshë…" aria-label="Kërko në fjalor">
+          <input id="glossarySearch" type="search" placeholder="Kërko p.sh. varroa, propolis, mbretëreshë, oksalik…" aria-label="Kërko në fjalor">
           <select id="categoryFilter" aria-label="Filtro sipas kategorisë"></select>
           <span id="glossaryCount"></span>
         </div>
@@ -97,66 +144,207 @@
       </section>
 
       <section id="customView" class="view">
-        <div class="view-header"><p class="eyebrow">FJALORI PERSONAL</p><h1>Termat e fermës suaj</h1><p>Shtoni shënime, emërtime lokale ose përkthime të miratuara për punën tuaj.</p></div>
+        <div class="view-header">
+          <p class="eyebrow">FJALORI PERSONAL</p>
+          <h1>Termat e fermës suaj</h1>
+          <p>Shtoni shënime, emërtime lokale ose përkthime të miratuara për punën tuaj ditore.</p>
+        </div>
         <div class="custom-grid">
           <form id="customForm" class="custom-form">
-            <h2>Shto një term</h2>
-            <label>Termi burimor<input id="customSource" required maxlength="100" placeholder="p.sh. ushqim stimulues"></label>
+            <h2>Shto një term personal</h2>
+            <label>Termi burimor<input id="customSource" required maxlength="120" placeholder="p.sh. ushqim stimulues"></label>
             <label>Gjuha burimore<select id="customSourceLanguage"></select></label>
-            <label>Përkthimi<input id="customTarget" required maxlength="160" placeholder="Përkthimi teknik"></label>
+            <label>Përkthimi teknik<input id="customTarget" required maxlength="180" placeholder="Përkthimi në gjuhën e synuar"></label>
             <label>Gjuha e synuar<select id="customTargetLanguage"></select></label>
-            <label>Shënim (opsionale)<textarea id="customNote" maxlength="300" placeholder="Konteksti i përdorimit…"></textarea></label>
+            <label>Shënim / Kontekst (opsionale)<textarea id="customNote" maxlength="350" placeholder="Konteksti i përdorimit, doza, bima përkatëse…"></textarea></label>
             <button type="submit" class="primary-button">Ruaj termin <span>+</span></button>
           </form>
           <aside class="custom-library">
-            <div class="library-head"><div><h2>Termat e ruajtur</h2><p id="customCount">0 terma personalë</p></div><div class="library-actions"><button id="exportButton" class="outline-button">Eksporto</button><button id="importButton" class="outline-button">Importo</button></div></div>
+            <div class="library-head">
+              <div>
+                <h2>Termat e ruajtur</h2>
+                <p id="customCount">0 terma personalë</p>
+              </div>
+              <div class="library-actions">
+                <button id="exportButton" class="outline-button">Eksporto JSON</button>
+                <button id="importButton" class="outline-button">Importo JSON</button>
+              </div>
+            </div>
             <div id="customList" class="custom-list"><p class="empty-state">Nuk keni shtuar ende terma personalë.</p></div>
           </aside>
         </div>
       </section>
 
       <section id="hivesView" class="view">
-        <div class="view-header module-header"><p class="eyebrow">MY HIVES</p><h1>Kosheret e mia</h1><p>Ruani kontrollet, vendndodhjet dhe gjendjen e secilës koshere. Të dhënat qëndrojnë në këtë pajisje dhe punojnë edhe pa internet.</p></div>
+        <div class="view-header module-header">
+          <p class="eyebrow">MY HIVES — REGJISTËR LOKAL</p>
+          <h1>Kosheret e mia</h1>
+          <p>Ruani kontrollet, vendndodhjet, trajtimet dhe gjendjen e secilës koshere. Të dhënat qëndrojnë 100% në këtë pajisje.</p>
+        </div>
         <div class="hive-grid">
           <form id="hiveForm" class="hive-form">
-            <div class="form-heading"><h2>Shto koshere</h2><p>Regjistro një njësi të re në bletoren tënde.</p></div>
-            <label>Emri i kosheres<input id="hiveName" required maxlength="80" placeholder="p.sh. Koshere 01 – Dajt"></label>
-            <label>Vendndodhja<input id="hiveLocation" required maxlength="120" placeholder="p.sh. Tiranë, Shqipëri"></label>
-            <label>Gjendja<select id="hiveStatus"><option value="healthy">E shëndetshme</option><option value="attention">Kërkon kontroll</option><option value="treatment">Në trajtim</option><option value="inactive">Joaktive</option></select></label>
+            <div class="form-heading">
+              <h2>Shto koshere</h2>
+              <p>Regjistroni një njësi të re në bletoren tuaj.</p>
+            </div>
+            <label>Emri / Numri i kosheres<input id="hiveName" required maxlength="80" placeholder="p.sh. Koshere 01 – Dajt"></label>
+            <label>Vendndodhja / Kullota<input id="hiveLocation" required maxlength="120" placeholder="p.sh. Parku Dajt, Tiranë"></label>
+            <label>Gjendja shëndetësore
+              <select id="hiveStatus">
+                <option value="healthy">E shëndetshme</option>
+                <option value="attention">Kërkon kontroll</option>
+                <option value="treatment">Në trajtim</option>
+                <option value="inactive">Joaktive</option>
+              </select>
+            </label>
             <label>Kontrolli i fundit<input id="hiveInspection" type="date"></label>
-            <label>Shënime<textarea id="hiveNotes" maxlength="350" placeholder="Vëzhgime për pjellën, ushqimin ose trajtimin…"></textarea></label>
+            <label>Shënime (pjellja, trajtimi, ushqimi)<textarea id="hiveNotes" maxlength="350" placeholder="Vëzhgime për kornizat, rezervat e mjaltit, pjellën ose trajtimin e varroas…"></textarea></label>
             <button type="submit" class="primary-button">Ruaj kosheren <span>+</span></button>
           </form>
           <section class="hive-library" aria-label="Lista e koshereve">
-            <div class="library-head"><div><h2>Bletoja juaj</h2><p id="hiveCount">0 koshere të ruajtura</p></div></div>
+            <div class="library-head">
+              <div>
+                <h2>Bletoja juaj</h2>
+                <p id="hiveCount">0 koshere të ruajtura</p>
+              </div>
+            </div>
             <div id="hiveList" class="hive-list"><p class="empty-state">Nuk keni shtuar ende koshere. Përdorni formularin për të nisur regjistrin tuaj lokal.</p></div>
           </section>
         </div>
       </section>
 
       <section id="communityView" class="view">
-        <div class="view-header module-header"><p class="eyebrow">COMMUNITY HIVES</p><h1>Komuniteti i bletarëve</h1><p>Ruani pyetje, përvoja dhe zgjidhje për bletarinë në një panel lokal. Mund t’i eksportoni më vonë për t’i ndarë me kolegët.</p></div>
+        <div class="view-header module-header">
+          <p class="eyebrow">DISKUTIME LOKALE (LOCAL-FIRST)</p>
+          <h1>Komuniteti lokal i bletarëve</h1>
+          <p>Ruani pyetje, përvoja dhe këshilla në këtë pajisje pa nevojë për llogari interneti. Mund t’i eksportoni në JSON për t’i ndarë me kolegët bletarë.</p>
+        </div>
         <div class="community-grid">
           <form id="communityForm" class="community-form">
-            <div class="form-heading"><h2>Nis një diskutim</h2><p>Postimi ruhet lokalisht në pajisjen tënde.</p></div>
-            <label>Emri / firma<input id="communityAuthor" required maxlength="60" placeholder="p.sh. Bletari i Tiranës"></label>
-            <label>Tema<select id="communityTopic"><option>Menaxhimi i kolonisë</option><option>Shëndeti dhe sëmundjet</option><option>Pajisje</option><option>Dimërimi</option><option>Bimët dhe kullota</option><option>Terminologji</option></select></label>
-            <label>Titulli<input id="communityTitle" required maxlength="120" placeholder="Pyetja ose përvoja juaj"></label>
+            <div class="form-heading">
+              <h2>Nis një diskutim lokal</h2>
+              <p>Postimi ruhet lokalisht dhe privatisht në kompjuterin tuaj.</p>
+            </div>
+            <label>Autori / Emri<input id="communityAuthor" required maxlength="60" placeholder="p.sh. Bletari i Korçës"></label>
+            <label>Tema
+              <select id="communityTopic">
+                <option>Menaxhimi i kolonisë</option>
+                <option>Shëndeti dhe sëmundjet</option>
+                <option>Trajtimet dhe etiketat</option>
+                <option>Pajisje & Koshere</option>
+                <option>Dimërimi & Ushqimi</option>
+                <option>Bimët dhe kullota</option>
+                <option>Terminologji</option>
+              </select>
+            </label>
+            <label>Titulli<input id="communityTitle" required maxlength="120" placeholder="Pyetja ose përvoja juaj kryesore"></label>
             <label>Përshkrimi<textarea id="communityBody" required maxlength="800" placeholder="Shkruani hollësitë që do t’u vlejnë bletarëve të tjerë…"></textarea></label>
             <button type="submit" class="primary-button">Publiko lokalisht <span>+</span></button>
           </form>
           <section class="community-library" aria-label="Diskutime të ruajtura">
             <div class="community-tools">
               <input id="communitySearch" type="search" placeholder="Kërko diskutime…" aria-label="Kërko diskutime">
-              <select id="communityFilter" aria-label="Filtro diskutimet sipas temës"><option value="Të gjitha">Të gjitha temat</option><option>Menaxhimi i kolonisë</option><option>Shëndeti dhe sëmundjet</option><option>Pajisje</option><option>Dimërimi</option><option>Bimët dhe kullota</option><option>Terminologji</option></select>
+              <select id="communityFilter" aria-label="Filtro diskutimet sipas temës">
+                <option value="Të gjitha">Të gjitha temat</option>
+                <option>Menaxhimi i kolonisë</option>
+                <option>Shëndeti dhe sëmundjet</option>
+                <option>Trajtimet dhe etiketat</option>
+                <option>Pajisje & Koshere</option>
+                <option>Dimërimi & Ushqimi</option>
+                <option>Bimët dhe kullota</option>
+                <option>Terminologji</option>
+              </select>
             </div>
-            <div class="community-actions"><p id="communityCount">0 diskutime lokale</p><div><button id="exportCommunityButton" type="button" class="outline-button">Eksporto</button><button id="importCommunityButton" type="button" class="outline-button">Importo</button></div></div>
+            <div class="community-actions">
+              <p id="communityCount">0 diskutime lokale</p>
+              <div>
+                <button id="exportCommunityButton" type="button" class="outline-button">Eksporto</button>
+                <button id="importCommunityButton" type="button" class="outline-button">Importo</button>
+              </div>
+            </div>
             <div id="communityList" class="community-list"><p class="empty-state">Nuk ka ende diskutime të ruajtura. Krijoni postimin e parë për këtë pajisje.</p></div>
           </section>
         </div>
       </section>
+
+      <!-- Pamja e Re: Qendra e Kopjeve Rezervë (Backup & Restore Center) -->
+      <section id="backupView" class="view">
+        <div class="view-header module-header">
+          <p class="eyebrow">MENAXHIMI I TË DHËNAVE LOKALE</p>
+          <h1>Qendra e Kopjeve Rezervë (Backup & Restore)</h1>
+          <p>Eksportoni të gjitha të dhënat tuaja lokale (Fjalori im, Kosheret dhe Diskutimet) në një skedar të vetëm të sigurt, ose riktheni një kopje ekzistuese në çdo kohë.</p>
+        </div>
+        <div class="backup-grid">
+          <div class="backup-card">
+            <div class="backup-card-head">
+              <span class="backup-badge">EKSPORT</span>
+              <h2>Krijo Kopje Rezervë (Backup)</h2>
+            </div>
+            <p>Ruan të gjitha të dhënat lokale në një skedar JSON të formatuar me version skeme.</p>
+            <div class="backup-stats">
+              <div><span id="backupCustomCount">0</span><small>Terma personalë</small></div>
+              <div><span id="backupHiveCount">0</span><small>Koshere</small></div>
+              <div><span id="backupCommunityCount">0</span><small>Diskutime</small></div>
+            </div>
+            <button id="createBackupBtn" class="primary-button full-width">Shkarko Kopjen Rezervë (JSON) <span>⬇</span></button>
+          </div>
+
+          <div class="backup-card">
+            <div class="backup-card-head">
+              <span class="backup-badge badge-restore">IMPORT</span>
+              <h2>Rikthe nga Kopja Rezervë (Restore)</h2>
+            </div>
+            <p>Zgjidhni një skedar rezervë të mëparshëm (`bletefjale-backup-*.json`) për të rikthyer të dhënat tuaja.</p>
+            <div class="restore-options">
+              <label class="radio-label">
+                <input type="radio" name="restoreMode" value="merge" checked>
+                <span><b>Bashko të dhënat (Merge):</b> Ruan të dhënat ekzistuese dhe shton vetëm artikujt e rinj.</span>
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="restoreMode" value="replace">
+                <span><b>Zëvendëso plotësisht (Overwrite):</b> Fshin të dhënat aktuale dhe vendos ato nga kopja rezervë.</span>
+              </label>
+            </div>
+            <button id="restoreBackupBtn" class="outline-button full-width">Zgjidh Skedar dhe Rikthe <span>⬆</span></button>
+          </div>
+        </div>
+      </section>
     </main>
   </div>
+
+  <!-- Modal: Rishikimi dhe Korrigjimi i Tekstit OCR -->
+  <div id="ocrModal" class="modal-overlay" aria-hidden="true" role="dialog" aria-labelledby="ocrModalTitle">
+    <div class="modal-dialog">
+      <div class="modal-head">
+        <div>
+          <h3 id="ocrModalTitle">Shqyrto dhe Korrigjo Tekstin OCR</h3>
+          <p id="ocrModalSubtitle" class="modal-sub">Rishikoni tekstin e nxjerrë nga skedari para përkthimit.</p>
+        </div>
+        <button id="closeOcrModalBtn" class="modal-close" aria-label="Mbyll dritaren">×</button>
+      </div>
+      <div class="modal-toolbar">
+        <div class="modal-meta">
+          <span id="ocrFileName" class="ocr-meta-tag">Skedari: —</span>
+          <span id="ocrConfidenceTag" class="ocr-meta-tag tag-success">Lexim i pastër</span>
+          <span id="ocrCharCount" class="ocr-meta-tag">0 karaktere</span>
+        </div>
+        <div class="modal-quick-actions">
+          <button id="ocrCleanLineBreaksBtn" class="outline-button-small" title="Bashkon rreshtat e ndarë në mes të fjalive">Bashko rreshtat</button>
+          <button id="ocrNormalizeSpacesBtn" class="outline-button-small" title="Pastro hapësirat e dyfishta">Pastro hapësirat</button>
+          <button id="ocrCopyTextBtn" class="outline-button-small">Kopjo</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <label for="ocrReviewText" class="sr-only">Teksti OCR i redaktueshëm</label>
+        <textarea id="ocrReviewText" class="ocr-editor" placeholder="Teksti i lexuar nga OCR do të shfaqet këtu për korrigjim…"></textarea>
+      </div>
+      <div class="modal-foot">
+        <button id="cancelOcrBtn" class="outline-button">Anulo</button>
+        <button id="applyOcrBtn" class="primary-button">Dërgo në Përkthyes <span>→</span></button>
+      </div>
+    </div>
+  </div>
+
   <div id="toast" class="toast" role="alert"></div>
   <script src="glossary.js"></script>
   <script src="renderer.js"></script>
