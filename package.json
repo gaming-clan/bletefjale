@@ -7,10 +7,10 @@
   "license": "MIT",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder --win portable --x64",
+    "build": "npx electron-builder --win portable --x64",
     "lint": "node --check main.js && node --check preload.js && node --check src/renderer.js && node --check src/glossary.js && node tests/glossary.test.js && node tests/themes.test.js && node tests/modules.test.js && node tests/document-translation.test.js && node tests/backup-restore.test.js",
-    "build:dir": "electron-builder --win --x64 --dir",
-    "build:portable": "electron-builder --win portable --x64",
+    "build:dir": "npx electron-builder --win --x64 --dir",
+    "build:portable": "npx electron-builder --win portable --x64",
     "test:glossary": "node tests/glossary.test.js",
     "test:themes": "node tests/themes.test.js",
     "test:modules": "node tests/modules.test.js",
@@ -21,6 +21,9 @@
     "appId": "com.bletefjale.desktop",
     "productName": "BletëFjalë",
     "artifactName": "BleteFjale-${version}-Windows-Portable.${ext}",
+    "electronVersion": "37.2.6",
+    "npmRebuild": false,
+    "buildDependenciesFromSource": false,
     "files": [
       "src/**/*",
       "assets/**/*",
@@ -49,7 +52,7 @@
     ]
   },
   "devDependencies": {
-    "electron": "^37.2.6",
+    "electron": "37.2.6",
     "electron-builder": "^26.0.12"
   },
   "allowScripts": {
