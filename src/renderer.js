@@ -17,23 +17,36 @@ const AVAILABLE_THEMES = new Set([
 // offline turqisht–shqip dhe plotësojnë, jo zëvendësojnë, fjalorin teknik.
 const DOCUMENT_LABEL_PHRASES = {
   'tr:sq': [
-    { id: 'doc-varotem-apply-between-frames', source: 'Arıların üzerine temas edecek şekilde tüm çerçeve aralarına uygulayarak, bütün koloninin tüketmesi sağlanmalıdır', target: 'Aplikojeni ndërmjet të gjitha kornizave, duke siguruar kontakt me bletët, në mënyrë që ta konsumojë e gjithë kolonia.', category: 'Etiketa & Trajtime' },
-    { id: 'doc-varotem-temperature-application', source: 'Hava sıcaklığının 14°C ve üzerinde olduğu her dönemde püskürtme uygulaması, 10°C ve üzerinde olduğu her dönemde damlatma uygulaması yapılması tavsiye edilir', target: 'Rekomandohet aplikimi me spërkatje kur temperatura është 14°C ose më e lartë dhe aplikimi me pikim kur temperatura është 10°C ose më e lartë.', aliases: ['Hava sıcaklığının 14*C ve üzerinde olduğu her dönemde püskürtme uygulaması, 10*C ve üzerinde olduğu her dönemde damlatma uygulaması yapılması tavsiye edilir'], category: 'Etiketa & Trajtime' },
-    { id: 'doc-varotem-dose-per-frame', source: 'Her çerçeve arasına 2 ml püskürtme veya damlatma şeklinde uygulayınız', target: 'Aplikoni 2 ml me spërkatje ose me pikim ndërmjet çdo kornize.', aliases: ['Her çevçeve arasına 2 ml püskürtme veya damlatma şeklinde uygulayınız'], category: 'Etiketa & Trajtime' },
-    { id: 'doc-varotem-no-honey-residue', source: 'Balda kalıntı bırakmaz, bal akım döneminde dahi kullanılabilir', target: 'Nuk lë mbetje në mjaltë dhe mund të përdoret edhe gjatë rrjedhës së mjaltit.', category: 'Etiketa & Trajtime' },
+    // Varotem & Trajtime
+    { id: 'doc-varotem-apply-between-frames', source: 'Arıların üzerine temas edecek şekilde tüm çerçeve aralarına uygulayarak, bütün koloninin tüketmesi sağlanmalıdır', target: 'Aplikojeni ndërmjet të gjitha kornizave, duke siguruar kontakt me bletët, në mënyrë që ta konsumojë e gjithë kolonia.', aliases: ['Arıların üzerine temas edecek şekilde tüm çerçeve aralarına uygulayarak bütün koloninin tüketmesi sağlanmalıdır'], category: 'Etiketa & Trajtime' },
+    { id: 'doc-varotem-temperature-application', source: 'Hava sıcaklığının 14°C ve üzerinde olduğu her dönemde püskürtme uygulaması, 10°C ve üzerinde olduğu her dönemde damlatma uygulaması yapılması tavsiye edilir', target: 'Rekomandohet aplikimi me spërkatje kur temperatura është 14°C ose më e lartë dhe aplikimi me pikim kur temperatura është 10°C ose më e lartë.', aliases: ['Hava sıcaklığının 14*C ve üzerinde olduğu her dönemde püskürtme uygulaması, 10*C ve üzerinde olduğu her dönemde damlatma uygulaması yapılması tavsiye edilir', 'Hava sıcaklığının 14*C ve üzerinde olduğu her dönemde püskürtme uygulaması 10*C ve üzerinde olduğu her dönemde damlatma uygulaması yapılması tavsiye edilir'], category: 'Etiketa & Trajtime' },
+    { id: 'doc-varotem-dose-per-frame', source: 'Her çerçeve arasına 2 ml püskürtme veya damlatma şeklinde uygulayınız', target: 'Aplikoni 2 ml me spërkatje ose me pikim ndërmjet çdo kornize.', aliases: ['Her çevçeve arasına 2 ml püskürtme veya damlatma şeklinde uygulayınız', 'Her cerceve arasina 2 ml puskurtme veya damlatma seklinde uygulayiniz'], category: 'Etiketa & Trajtime' },
+    { id: 'doc-varotem-no-honey-residue', source: 'Balda kalıntı bırakmaz, bal akım döneminde dahi kullanılabilir', target: 'Nuk lë mbetje në mjaltë dhe mund të përdoret edhe gjatë rrjedhës së mjaltit.', aliases: ['Balda kalıntı bırakmaz bal akım döneminde dahi kullanılabilir'], category: 'Etiketa & Trajtime' },
     { id: 'doc-varotem-organic-suitable', source: 'Organik arı yetiştiriciliğine uygun olarak geliştirilmiştir', target: 'Është zhvilluar për përdorim të përshtatshëm në bletarinë organike.', category: 'Etiketa & Trajtime' },
     { id: 'doc-varotem-close-cap', source: 'Uygulama sonrası kapağı yeniden çevirerek kapalı olduğundan emin olunuz', target: 'Pas aplikimit, sigurohuni që kapaku të jetë mbyllur sërish.', category: 'Etiketa & Trajtime' },
-    { id: 'doc-varotem-external-parasites', source: 'Dış parazitlere karşı arıların fizyolojik korunmasını desteklenmesine yardımcı olur', target: 'Ndihmon në mbështetjen e mbrojtjes fiziologjike të bletëve kundër parazitëve të jashtëm.', category: 'Etiketa & Trajtime' },
+    { id: 'doc-varotem-external-parasites', source: 'Dış parazitlere karşı arıların fizyolojik korunmasını desteklenmesine yardımcı olur', target: 'Ndihmon në mbështetjen e mbrojtjes fiziologjike të bletëve kundër parazitëve të jashtëm.', aliases: ['Dış parazitlere karşı arıların fizyolojik korunmasını, desteklenmesine yardımcı olur', 'Dış parazitlere karşı arıların fizyolojik korunmasını'], category: 'Etiketa & Trajtime' },
     { id: 'doc-varotem-strengthens-colony', source: 'Bal arılarında dış parazitlere karşı koloniyi güçlendirir', target: 'Forcon koloninë e bletëve të mjaltit kundër parazitëve të jashtëm.', category: 'Etiketa & Trajtime' },
     { id: 'doc-varotem-supports-brood', source: 'Yavru gelişimini destekler', target: 'Mbështet zhvillimin e pjellës.', category: 'Etiketa & Trajtime' },
     { id: 'doc-varotem-digestion-immunity', source: 'Sindirim sistemini düzenler ve bağışıklık sistemini güçlendirmeye yardımcı olur', target: 'Ndihmon rregullimin e sistemit tretës dhe forcimin e sistemit imunitar.', category: 'Etiketa & Trajtime' },
     { id: 'doc-varotem-wingless-bees', source: 'Kanatsız arı çıkmasını önlemeye yardımcı olur', target: 'Ndihmon në parandalimin e daljes së bletëve pa krahë.', category: 'Etiketa & Trajtime' },
     { id: 'doc-varotem-no-special-storage', source: 'Özel saklama koşulu yoktur', target: 'Nuk kërkohen kushte të veçanta ruajtjeje.', category: 'Etiketa & Trajtime' },
     { id: 'doc-varotem-use-opened-packages', source: 'Açılmış ambalajları kısa sürede uygulayınız', target: 'Përdorini paketimet e hapura brenda një kohe të shkurtër.', category: 'Etiketa & Trajtime' },
-    { id: 'doc-varotem-no-chemical-components', source: 'Renklendirici, koruyucu ve hiçbir kimyasal bileşen içermez', target: 'Nuk përmban ngjyrues, konservues ose përbërës kimikë.', category: 'Etiketa & Trajtime' },
-    { id: 'doc-inverturk-add-to-mixture', source: 'Tabloda belirtilen üretim miktarınıza göre İnvertürk ilave ederek karıştırıcıyı 1,5 saat boyunca çalıştırınız', target: 'Shtoni İnvertürk sipas sasisë së prodhimit të treguar në tabelë dhe mbajeni përzierësin në punë për 1,5 orë.', category: 'Ushqim & Etiketa' },
-    { id: 'doc-inverturk-give-to-bees', source: 'elde ettiğiniz invert şekeri gıdaya uygun ambalajlarda bal arılarının besin ihtiyacını desteklemek amaçlı verebilirsiniz', target: 'Sheqerin invert të përgatitur mund ta jepni në ambalazhe të përshtatshme për ushqim, për të mbështetur nevojat ushqimore të bletëve të mjaltit.', category: 'Ushqim & Etiketa' },
-    { id: 'doc-inverturk-invert-sugar', source: 'İnvert şeker yapımında, fondan ve kek yapımında ürünlerin amaçlı verebilirsiniz', target: 'Mund të përdoret për përgatitjen e sheqerit invert, fondantit dhe kekut ushqimor.', category: 'Ushqim & Etiketa' }
+    { id: 'doc-varotem-no-chemical-components', source: 'Renklendirici, koruyucu ve hiçbir kimyasal bileşen içermez', target: 'Nuk përmban ngjyrues, konservues ose përbërës kimikë.', aliases: ['Renklendirici koruyucu ve hiçbir kimyasal bileşen içermez'], category: 'Etiketa & Trajtime' },
+    { id: 'doc-varotem-healing-power', source: 'ARILAR İÇİN ONARICI GÜÇ', target: 'FUQI RIGJENERUESE PËR BLETËT', aliases: ['“ARILAR İÇİN ONARICI GÜÇ”', 'ARILAR ICIN ONARICI GUC'], category: 'Etiketa & Trajtime' },
+    { id: 'doc-varotem-herbal-premix', source: 'HERBAL LIĞUID PREMİX', target: 'PREMIKS BIMOR I LËNGSHËM', aliases: ['HERBAL LIQUID PREMIX', 'HERBAL LIQUID PREMİX'], category: 'Etiketa & Trajtime' },
+
+    // İnvertürk & Ushqim
+    { id: 'doc-inverturk-clean-water-heat', source: 'Karıştırıcılı ve ısıtıcılı kazan içerisine temiz ve beklememiş su koyunuz. Isı değeri 90*C ye gelinceye kadar ısıtınız', target: 'Vendosni ujë të pastër e të freskët në kazanin me përzierës dhe ngrohës. Ngrohni ujin derisa temperatura të arrijë 90°C.', aliases: ['Karıştırıcılı ve ısıtıcılı kazan içerisine temiz ve beklememiş su koyunuz'], category: 'Ushqim & Etiketa' },
+    { id: 'doc-inverturk-heat-water', source: 'Isı değeri 90*C ye gelinceye kadar ısıtınız', target: 'Ngrohni ujin derisa temperatura të arrijë 90°C.', aliases: ['90*C ye gelinceye kadar ısıtınız', '90°C ye gelinceye kadar ısıtınız'], category: 'Ushqim & Etiketa' },
+    { id: 'doc-inverturk-add-sugar-stabilize', source: 'Karıştırıcı çalışır vaziyette pancar şekerini kademeli olarak ilave ediniz. Pancar şekeri tamamen ilave ettikten sonra ısı değerini 75*C de sabitleyiniz', target: 'Shtoni gradualisht sheqerin e panxharit me përzierësin në punë. Pasi të keni shtuar plotësisht sheqerin e panxharit, stabilizoni temperaturën në 75°C.', aliases: ['Karıştırıcı çalışır vaziyette pancar şekerini kademeli olarak ilave ediniz', 'Pancar şekeri tamamen ilave ettikten sonra ısı değerini 75*C de sabitleyiniz', 'Pancar şekeri tamamen ilave ettikten sonra ısı değerini 75°C de sabitleyiniz'], category: 'Ushqim & Etiketa' },
+    { id: 'doc-inverturk-more-than-enzyme', source: 'enzimden çok daha fazlası', target: 'shumë më tepër se një enzimë', aliases: ['“enzimden çok daha fazlası”', 'much more than enzyme', '“much more than enzyme”'], category: 'Ushqim & Etiketa' },
+    { id: 'doc-inverturk-add-to-mixture', source: 'Tabloda belirtilen üretim miktarınıza göre İnvertürk ilave ederek karıştırıcıyı 1,5 saat boyunca çalıştırınız', target: 'Shtoni İnvertürk sipas sasisë së prodhimit të treguar në tabelë dhe mbajeni përzierësin në punë për 1,5 orë.', aliases: ['Tabloda belirtilen üretim miktarınıza göre İnvertürk ilave ederek karıştırıcıyı 1,5 saat boyunca çalıştırınız. Belirtilen süre sonunda elde ettiğiniz invert şekeri gıdaya uygun ambalajlarda bal arılarının besin ihtiyacını desteklemek amaçlı verebilirsiniz'], category: 'Ushqim & Etiketa' },
+    { id: 'doc-inverturk-give-to-bees', source: 'elde ettiğiniz invert şekeri gıdaya uygun ambalajlarda bal arılarının besin ihtiyacını desteklemek amaçlı verebilirsiniz', target: 'Sheqerin invert të përgatitur mund ta jepni në ambalazhe të përshtatshme për ushqim, për të mbështetur nevojat ushqimore të bletëve të mjaltit.', aliases: ['süre sonunda elde ettiğiniz invert şekeri gıdaya uygun ambalajlarda bal arılarının besin ihtiyacını desteklemek amaçlı verebilirsiniz'], category: 'Ushqim & Etiketa' },
+    { id: 'doc-inverturk-invert-sugar', source: 'İnvert şeker yapımında, fondan ve kek yapımında ürünlerin içerisine ilave edilir', target: 'Shtohet në përgatitjen e sheqerit invert, fondantit dhe kekut ushqimor për bletët.', aliases: ['İnvert şeker yapımında, fondan ve kek yapımında ürünlerin amaçlı verebilirsiniz', 'İnvert şeker yapımında, fondon ve kek yapımında ürünlerin amaçlı verebilirsiniz', 'İnvert şeker yapımında, fondon ve kek yapımında ürünlerin'], category: 'Ushqim & Etiketa' },
+    { id: 'doc-inverturk-biomolecules', source: 'İçerdiği bitki ekstrelerinden gelen biomoleküler, şekerin invert edilmesini sağlarken içeriğindeki vitaminler, mineraller, bitkisel proteinler bal arılarının nektar gelmediği dönemlerde besin ihtiyaçlarını karşılamaya yardımcı olur', target: 'Biomolekulat nga ekstraktet bimore mundësojnë invertimin e sheqerit, ndërsa vitaminat, mineralet dhe proteinat bimore ndihmojnë në plotësimin e nevojave ushqyese të bletëve gjatë periudhave kur nuk ka prurje nektari.', aliases: ['içerisine ilave edilir. İçerdiği bitki ekstrelerinden gelen biomoleküler, şekerin invert edilmesini sağlarken içeriğindeki vitaminler, mineraller, bitkisel proteinler bal arılarının nektar gelmediği dönemlerde besin ihtiyaçlarını karşılamaya yardımcı olur.'], category: 'Ushqim & Etiketa' },
+    { id: 'doc-inverturk-natural-factors', source: 'İnvertürk bitkisel karışım premiksi doğada ve balda doğal olarak bulunan etkenler dikkate alınarak geliştirilmiştir', target: 'Premiksi bimor İnvertürk është zhvilluar duke marrë në konsideratë faktorët natyrorë që gjenden në natyrë dhe në mjaltë.', category: 'Ushqim & Etiketa' },
+    { id: 'doc-inverturk-feeding-period', source: 'Arıların besleme ihtiyacı olduğu erken ilkbahar ve sonbaharda kullanılması tavsiye edilir', target: 'Rekomandohet të përdoret në fillim të pranverës dhe në vjeshtë kur bletët kanë nevojë për ushqim.', aliases: ['Arıların besleme ihtiyacı olduğu erkel ve sonbaharda kullanılması tavsiye edilir'], category: 'Ushqim & Etiketa' },
+    { id: 'doc-inverturk-no-residue', source: 'Bal akımında hiçbir şekilde kalıntı bırakmaz', target: 'Nuk lë asnjë mbetje gjatë periudhës së vjeljes së mjaltit.', aliases: ['Bal akım döneminde hiçbir şekilde kalıntı bırakmaz', 'Bal umund. hiçbir şekilde kalıntı bırakmaz'], category: 'Ushqim & Etiketa' }
   ]
 };
 
@@ -141,8 +154,10 @@ function escapeRegex(value) {
 }
 
 function phraseExpression(source) {
-  const flexibleWhitespace = escapeRegex(String(source || '').trim().replace(/\s+/g, ' ')).replaceAll(' ', '\\s+');
-  return new RegExp(`(^|[^\\p{L}\\p{N}])${flexibleWhitespace}(?=$|[^\\p{L}\\p{N}])`, 'giu');
+  const words = String(source || '').trim().split(/[\s,.:;*°"'\(\)\/\-]+/).filter(Boolean);
+  if (!words.length) return new RegExp('(?!)');
+  const pattern = words.map(w => escapeRegex(w)).join('[\\s,.:;*°"\'\\(\\)\\/\\-]+');
+  return new RegExp(`(^|[^\\p{L}\\p{N}])${pattern}(?=$|[^\\p{L}\\p{N}])`, 'giu');
 }
 
 function sourceLanguage() {
@@ -238,6 +253,10 @@ function createTextTranslation(text, from, to) {
       }
     }
   });
+
+  // Pastro pikat e dyfishta aksidentale nga zëvendësimi i frazave
+  output = output.replace(/\.{2,}/g, '.');
+
   return { text: output, matches, exact: false };
 }
 
@@ -489,9 +508,8 @@ function openOcrModal(text, fileName = 'Dokument', type = 'image') {
 
   // Vlerësimi i lexueshmërisë
   if (confTag) {
-    const lines = text.split('\n').filter(l => l.trim().length > 0);
     const words = text.split(/\s+/).filter(Boolean);
-    if (words.length > 5 && lines.length > 0) {
+    if (words.length > 5) {
       confTag.textContent = type === 'pdf-ocr' ? 'OCR nga PDF (Skanim)' : 'OCR nga Imazhi';
       confTag.className = 'ocr-meta-tag tag-success';
     } else {
@@ -565,18 +583,41 @@ async function copyOcrText() {
   }
 }
 
+function detectTurkishText(text) {
+  const lower = String(text || '').toLowerCase();
+  const turkishMarkers = [
+    'arı', 'kovan', 'çerçeve', 'şeker', 'kullanım', 'saklama', 'üretici',
+    'içerir', 'püskürtme', 'damlatma', 'koloni', 'parazit', 'balda'
+  ];
+  return turkishMarkers.some(marker => lower.includes(marker)) || /[ığüşöçİĞÜŞÖÇ]/.test(text);
+}
+
 async function importDocument() {
   try {
     if (!window.desktopAPI?.importDocument) {
       showToast('Importi i dokumenteve mbështetet në versionin desktop.');
       return;
     }
-    const result = await window.desktopAPI.importDocument(sourceLanguage());
+    let currentSourceLang = sourceLanguage();
+    const result = await window.desktopAPI.importDocument(currentSourceLang);
     if (result.canceled) return;
     if (result.error) {
       showToast(`Ngarkimi nuk u krye: ${result.error}`);
       return;
     }
+
+    // Auto-detektim i gjuhës turke nëse përdoruesi e kishte lënë burimin në shqip
+    if (currentSourceLang === 'sq' && detectTurkishText(result.text)) {
+      const srcSelect = $('#sourceLanguage');
+      const tgtSelect = $('#targetLanguage');
+      if (srcSelect && tgtSelect) {
+        srcSelect.value = 'tr';
+        tgtSelect.value = 'sq';
+        renderQuickTerms();
+      }
+      showToast('U zbulua tekst turqisht: Gjuha u vendos Turqisht → Shqip.');
+    }
+
     $('#sourceText').value = result.text;
     updateSourceCount();
     translate();
