@@ -14,6 +14,7 @@ const OCR_LANGUAGE_CODES = {
 const MAX_PDF_OCR_PAGES = 10;
 const PDF_OCR_RENDER_SCALE = 4;
 const OCR_PAGE_SEGMENTATION_MODE = '3';
+const MAX_IMPORT_FILE_BYTES = 50 * 1024 * 1024; // 50 MB
 
 async function recognizeImage(source, sourceLanguage) {
   const worker = await Tesseract.createWorker(OCR_LANGUAGE_CODES[sourceLanguage] || 'eng');
@@ -80,6 +81,19 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+  // Content Security Policy — defense-in-depth layer
+  const { session } = require('electron');
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        'Content-Security-Policy': [
+          "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'"
+        ]
+      }
+    });
+  });
+
   ipcMain.handle('clipboard:read', () => clipboard.readText());
   ipcMain.handle('clipboard:write', (_event, text) => {
     clipboard.writeText(String(text || ''));
@@ -122,6 +136,24 @@ app.whenReady().then(() => {
     const extension = path.extname(filePath).toLowerCase();
     const imageExtensions = new Set(['.png', '.jpg', '.jpeg', '.webp', '.bmp', '.tif', '.tiff']);
     const textExtensions = new Set(['.txt', '.md', '.csv']);
+    const allowedExtensions = new Set([...imageExtensions, ...textExtensions, '.pdf', '.docx']);
+
+    if (!allowedExtensions.has(extension)) {
+      return { canceled: false, error: 'Formati i skedarit nuk mbështetet. Formatet e lejuara: PNG, JPG, WEBP, BMP, TIFF, PDF, DOCX, TXT, MD, CSV.' };
+    }
+
+    // Validimi i madhësisë së skedarit
+    try {
+      const stats = fs.statSync(filePath);
+      if (stats.size > MAX_IMPORT_FILE_BYTES) {
+        return { canceled: false, error: `Skedari është shumë i madh (${(stats.size / 1024 / 1024).toFixed(1)} MB). Madhësia maksimale e lejuar është 50 MB.` };
+      }
+      if (stats.size === 0) {
+        return { canceled: false, error: 'Skedari është bosh.' };
+      }
+    } catch (statErr) {
+      return { canceled: false, error: 'Nuk u arrit leximi i skedarit. Kontrolloni që skedari ekziston dhe keni leje qasjeje.' };
+    }
 
     try {
       let text = '';

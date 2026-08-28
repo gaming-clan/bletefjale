@@ -2,9 +2,13 @@
 
 > Ky plan është operacional; ai nuk zëvendëson këshillën ligjore, tatimore ose financiare të përshtatur për biznesin dhe juridiksionin tuaj.
 
+**Përditësuar:** 28 gusht 2026 · **Versioni aktual:** v1.7.0
+
 ## Pozicionimi
 
 **BletëFjalë** është një përkthyes teknik lokal-first për bletari. Diferencuesi nuk është përkthimi i përgjithshëm: është fjalori shumëgjuhësh dhe rrjedha e punës për terma të bletarisë, imazhe/dokumente dhe fjalor personal.
+
+> **Asistenti lokal i terminologjisë dhe dokumenteve të bletarisë për bletarë, shoqata, shitës pajisjesh dhe specialistë.**
 
 | Segmenti | Problemi kryesor | Oferta fillestare |
 |---|---|---|
@@ -33,10 +37,13 @@ Filloni me një version **Freemium**: kërkim dhe përkthim bazë pa pagesë, nd
 | Certifikata Windows code-signing | Pronari i produktit | Kërkon blerje dhe konfigurim të sigurt |
 | Upload key Android + Play App Signing | Pronari i produktit | Kërkon krijim lokal |
 | Apple certificate/profiles | Pronari i produktit në macOS | Kërkon Apple Developer Program |
-| Privatësi, kushte, licencë, kthime | Jurist/ekspert lokal | Draftet janë në repo; kërkohet rishikim |
+| Privatësi, kushte, licencë, kthime | Jurist/ekspert lokal | Draftet janë finalizuar në repo (v1.7.0); kërkohet rishikim ligjor |
 | Store screenshots dhe përshkrim | Marketing | Përdorni aplikacionin real, jo mockup |
 | Support email dhe SLA | Operacione | Krijoni para shitjes |
 | Beta + raport gabimesh | Produkt | Niseni me përdorues realë |
+| Content Security Policy | Zhvillim | ✅ Realizuar në v1.7.0 |
+| Validim skedarësh (tip + madhësi) | Zhvillim | ✅ Realizuar në v1.7.0 |
+| Teste end-to-end (53+ teste) | QA | ✅ Realizuar në v1.7.0 |
 
 ## Çmimi fillestar për validim
 
@@ -47,7 +54,7 @@ Testoni një nga këto, jo të gjitha njëherësh: **19–29 € licencë vjetor
 | Java | Veprimi | Rezultati |
 |---|---|---|
 | 1 | Regrutoni 12 beta-testues: bletarë, një veteriner, një trajner | Listë testuesish dhe formular feedback |
-| 2 | Mbyllni gabimet e beta-s, përmirësoni termat e munguar | Release candidate 1.1.x |
+| 2 | Mbyllni gabimet e beta-s, përmirësoni termat e munguar | Release candidate 1.8.x |
 | 3 | Krijoni politikat e rishikuara, store assets dhe listing | Paketë e gatshme për Play Console |
 | 4 | Ngrini testin e mbyllur, përgatitni faqen e shitjes dhe demonstrimin | Aplikim për production + pipeline shitjeje |
 

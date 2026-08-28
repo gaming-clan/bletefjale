@@ -1,6 +1,6 @@
 {
   "name": "bletefjale",
-  "version": "1.6.1",
+  "version": "1.7.0",
   "description": "Përkthyes shumëgjuhësh dhe asistent terminologjik për bletari.",
   "main": "main.js",
   "author": "BletëFjalë",
@@ -8,14 +8,17 @@
   "scripts": {
     "start": "electron .",
     "build": "npx electron-builder --win portable --x64",
-    "lint": "node --check main.js && node --check preload.js && node --check src/renderer.js && node --check src/glossary.js && node tests/glossary.test.js && node tests/themes.test.js && node tests/modules.test.js && node tests/document-translation.test.js && node tests/backup-restore.test.js",
+    "lint": "node --check main.js && node --check preload.js && node --check src/renderer.js && node --check src/glossary.js && node tests/glossary.test.js && node tests/themes.test.js && node tests/modules.test.js && node tests/document-translation.test.js && node tests/backup-restore.test.js && node tests/translation-workflow.test.js",
     "build:dir": "npx electron-builder --win --x64 --dir",
     "build:portable": "npx electron-builder --win portable --x64",
     "test:glossary": "node tests/glossary.test.js",
     "test:themes": "node tests/themes.test.js",
     "test:modules": "node tests/modules.test.js",
     "test:document-translation": "node tests/document-translation.test.js",
-    "test:backup-restore": "node tests/backup-restore.test.js"
+    "test:backup-restore": "node tests/backup-restore.test.js",
+    "test:workflow": "node tests/translation-workflow.test.js",
+    "test:all": "node tests/glossary.test.js && node tests/themes.test.js && node tests/modules.test.js && node tests/document-translation.test.js && node tests/backup-restore.test.js && node tests/translation-workflow.test.js",
+    "audit": "npm audit --omit=dev"
   },
   "build": {
     "appId": "com.bletefjale.desktop",

@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.7.0 — 2026-08-28
+- Applied strategic report (P0/P1) recommendations across the entire codebase.
+- **Security:** Added Content Security Policy (CSP) headers via Electron `session.webRequest` for defense-in-depth against XSS and content injection.
+- **Security:** Added file size validation (max 50 MB) and file type whitelist enforcement before document import processing.
+- **Documentation:** Comprehensive update of README.md with version badge, expanded FAQ, contribution guidelines, and accurate feature descriptions for v1.7.0.
+- **Documentation:** Expanded BUILDING.md with full release checklist, security audit steps, and semantic versioning guidance.
+- **Documentation:** Finalized PRIVACY.md with Backup & Restore data handling, user rights section, and GDPR-aligned transparency commitments.
+- **Documentation:** Expanded SECURITY.md with CSP policy details, file validation documentation, and updated release checklist.
+- **Documentation:** Updated production readiness, store listing, and launch plan documents in `docs/`.
+- **Testing:** Added comprehensive `translation-workflow.test.js` covering end-to-end translation flow, OCR text processing, backup schema validation, hive management, community posts, theme persistence, and phrase matching with OCR line-break variations.
+- **CI:** Updated GitHub Actions workflow with security audit step, updated lint to include all test suites.
+- **Strategic Report:** Updated with v1.7.0 status, marked completed P0 items, and revised next steps.
+
 ## 1.6.1 — 2026-08-26
 - Added an interactive **OCR Review & Correction** modal with confidence indicator, line-break cleanup tool, and direct transfer into the translation workspace.
 - Enhanced translation transparency by clearly separating **Verified Technical Terms** (with categories and badges) from unverified text, and adding a quick "+ Shto në Fjalorin tim" action for unmatched words.
