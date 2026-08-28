@@ -26,4 +26,4 @@ mobile/android/.gradle/
 mobile/android/local.properties
 mobile/ios/Pods/
 mobile/ios/.symlinks/
-mobile/android/.kotlin/ 
+mobile/android/.kotlin/

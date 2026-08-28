@@ -546,9 +546,8 @@ function applyOcrText() {
 function cleanOcrLineBreaks() {
   const editor = $('#ocrReviewText');
   if (!editor) return;
-  const original = editor.value;
   // Bashkon rreshtat që nuk mbarojnë me shenjë pikësimi
-  const cleaned = original
+  const cleaned = editor.value
     .replace(/([^\.\?!:\n])\n([a-zçë0-9\(\[\{"'a-zA-Z])/gu, '$1 $2')
     .replace(/[ \t]+/g, ' ')
     .trim();
@@ -559,8 +558,7 @@ function cleanOcrLineBreaks() {
 function normalizeOcrSpaces() {
   const editor = $('#ocrReviewText');
   if (!editor) return;
-  const original = editor.value;
-  const cleaned = original
+  const cleaned = editor.value
     .replace(/[ \t]+/g, ' ')
     .replace(/\n{3,}/g, '\n\n')
     .trim();
@@ -1042,7 +1040,7 @@ async function restoreFullBackup() {
 
     showToast(`Rikthimi përfundoi: ${incomingTerms.length} terma, ${incomingHives.length} koshere, ${incomingPosts.length} diskutime.`);
   } catch (err) {
-    showToast(`Rikthimi dështoi: ${err.message || 'Skedar i pavlefshëm'}`);
+    showToast(`Rikthimi dështoi: ${(err && err.message) || 'Skedar i pavlefshëm'}`);
   }
 }
 
