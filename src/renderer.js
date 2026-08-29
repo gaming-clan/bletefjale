@@ -4,6 +4,8 @@ const CUSTOM_STORAGE_KEY = 'bletefjale-custom-glossary-v1';
 const THEME_STORAGE_KEY = 'bletefjale-theme-v1';
 const HIVE_STORAGE_KEY = 'bletefjale-hives-v1';
 const COMMUNITY_STORAGE_KEY = 'bletefjale-community-v1';
+const HISTORY_STORAGE_KEY = 'bletefjale-translation-history-v1';
+const MAX_HISTORY_ITEMS = 50;
 const BACKUP_SCHEMA_VERSION = 1;
 const AVAILABLE_THEMES = new Set([
   'bletefjale',
@@ -53,6 +55,7 @@ const DOCUMENT_LABEL_PHRASES = {
 let customTerms = loadCustomTerms();
 let hives = loadStoredItems(HIVE_STORAGE_KEY, validHive);
 let communityPosts = loadStoredItems(COMMUNITY_STORAGE_KEY, validCommunityPost);
+let historyItems = loadStoredItems(HISTORY_STORAGE_KEY, validHistoryItem);
 let activeView = 'translate';
 let lastOcrResult = null;
 let lastTranslationResult = null;
@@ -76,6 +79,11 @@ function validHive(hive) {
 
 function validCommunityPost(post) {
   return post && typeof post.id === 'string' && typeof post.author === 'string' && typeof post.topic === 'string' && typeof post.title === 'string' && typeof post.body === 'string';
+}
+
+function validHistoryItem(item) {
+  return item && typeof item.id === 'string' && typeof item.source === 'string' && typeof item.target === 'string'
+    && typeof item.from === 'string' && typeof item.to === 'string' && typeof item.createdAt === 'string';
 }
 
 function loadStoredItems(key, validator) {
@@ -355,6 +363,7 @@ function translate() {
   const translation = createTextTranslation(rawText, sourceLanguage(), targetLanguage());
   lastTranslationResult = translation;
   setResult(translation.text, translation.matches, translation.exact);
+  recordTranslation(rawText, translation.text);
   if (statusMsg) {
     statusMsg.textContent = translation.matches.length
       ? 'Përkthimi është kryer duke përdorur terminologjinë e verifikuar të bletarisë.'
@@ -371,6 +380,74 @@ function showToast(message) {
     window.clearTimeout(showToast.timer);
     showToast.timer = window.setTimeout(() => toast.classList.remove('visible'), 2800);
   }
+}
+
+/* =========================================================================
+   HISTORIA E PËRKTHIMEVE
+   ========================================================================= */
+
+function recordTranslation(source, target) {
+  const trimmed = String(source || '').trim();
+  if (!trimmed || !target) return;
+  const from = sourceLanguage();
+  const to = targetLanguage();
+  const duplicate = historyItems.some(item => item.source === trimmed && item.from === from && item.to === to);
+  if (duplicate) return;
+  historyItems.unshift({
+    id: makeLocalId('hist'),
+    source: trimmed,
+    target,
+    from,
+    to,
+    createdAt: new Date().toISOString()
+  });
+  if (historyItems.length > MAX_HISTORY_ITEMS) historyItems.length = MAX_HISTORY_ITEMS;
+  saveStoredItems(HISTORY_STORAGE_KEY, historyItems);
+}
+
+function renderHistory() {
+  const countElem = $('#historyCount');
+  const listElem = $('#historyList');
+  if (!listElem) return;
+  if (countElem) {
+    countElem.textContent = `${historyItems.length} ${historyItems.length === 1 ? 'përkthim i ruajtur' : 'përkthime të ruajtura'}`;
+  }
+  listElem.innerHTML = historyItems.length ? historyItems.map(item => `
+    <article class="history-item" data-history-id="${item.id}">
+      <div class="history-langs"><span>${escapeHTML(item.from)}</span><span class="history-arrow">→</span><span>${escapeHTML(item.to)}</span></div>
+      <div class="history-pair"><strong>${escapeHTML(item.source)}</strong><span>→</span><strong>${escapeHTML(item.target)}</strong></div>
+      <div class="history-actions">
+        <span class="history-date">${escapeHTML(formatPostDate(item.createdAt))}</span>
+        <button class="outline-button-small history-reuse" data-history-id="${item.id}">Ripërdor</button>
+      </div>
+    </article>
+  `).join('') : '<p class="empty-state">Nuk ka ende përkthime të ruajtura. Përkthejini terma ose fraza për t\u2019i mbajtur këtu.</p>';
+
+  $$('[data-history-id]').forEach(button => {
+    button.addEventListener('click', () => {
+      const item = historyItems.find(entry => entry.id === button.dataset.historyId);
+      if (!item) return;
+      const srcSelect = $('#sourceLanguage');
+      const tgtSelect = $('#targetLanguage');
+      if (srcSelect) srcSelect.value = item.from;
+      if (tgtSelect) tgtSelect.value = item.to;
+      const sourceElem = $('#sourceText');
+      if (sourceElem) {
+        sourceElem.value = item.source;
+        updateSourceCount();
+        translate();
+        showView('translate');
+      }
+    });
+  });
+}
+
+function clearHistory() {
+  historyItems = [];
+  saveStoredItems(HISTORY_STORAGE_KEY, historyItems);
+  renderHistory();
+  renderBackupStats();
+  showToast('Historia e përkthimeve u fshi.');
 }
 
 function renderQuickTerms() {
@@ -484,6 +561,7 @@ function showView(viewName) {
   if (viewName === 'glossary') renderGlossary();
   if (viewName === 'custom') renderCustomTerms();
   if (viewName === 'hives') renderHives();
+  if (viewName === 'history') renderHistory();
   if (viewName === 'community') renderCommunity();
   if (viewName === 'backup') renderBackupStats();
 }
@@ -1179,6 +1257,10 @@ function setupEvents() {
 
   const restoreBkpBtn = $('#restoreBackupBtn');
   if (restoreBkpBtn) restoreBkpBtn.addEventListener('click', restoreFullBackup);
+
+  // History
+  const clearHistoryBtn = $('#clearHistoryBtn');
+  if (clearHistoryBtn) clearHistoryBtn.addEventListener('click', clearHistory);
 }
 
 function init() {

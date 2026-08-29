@@ -20,6 +20,7 @@
         <button class="nav-link active" data-view="translate">Përkthe</button>
         <button class="nav-link" data-view="glossary">Fjalori</button>
         <button class="nav-link" data-view="custom">Fjalori im</button>
+        <button class="nav-link" data-view="history">Historia</button>
         <button class="nav-link" data-view="hives">Kosheret</button>
         <button class="nav-link" data-view="community">Komuniteti lokal</button>
         <button class="nav-link" data-view="backup">Kopje Rezervë</button>
@@ -173,6 +174,19 @@
             <div id="customList" class="custom-list"><p class="empty-state">Nuk keni shtuar ende terma personalë.</p></div>
           </aside>
         </div>
+      </section>
+
+      <section id="historyView" class="view">
+        <div class="view-header module-header">
+          <p class="eyebrow">HISTORIA LOKALE</p>
+          <h1>Historia e përkthimeve</h1>
+          <p>Përkthimet e fundit ruhen vetëm në këtë pajisje për ripërdorim të shpejtë.</p>
+        </div>
+        <div class="history-toolbar">
+          <span id="historyCount">0 përkthime të ruajtura</span>
+          <button id="clearHistoryBtn" type="button" class="outline-button">Pastro historinë</button>
+        </div>
+        <div id="historyList" class="history-list"><p class="empty-state">Nuk ka ende përkthime të ruajtura.</p></div>
       </section>
 
       <section id="hivesView" class="view">
