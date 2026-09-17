@@ -15,6 +15,7 @@ electron-win32-x64.zip
 Thumbs.db
 .vscode/
 .idea/
+.freebuff/
 
 # Flutter
 mobile/.dart_tool/
